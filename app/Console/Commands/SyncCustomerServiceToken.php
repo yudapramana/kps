@@ -42,7 +42,8 @@ class SyncCustomerServiceToken extends Command
             // =====================================
             // 2️⃣ REQUEST TOKEN KE CUSTOMER APP
             // =====================================
-            $this->info('📡 Requesting new token from Customer App...');
+            $this->info('📡 Requesting new token from Customer App... URL: ' . config('services.customer_api.url') . '/api/internal/service-token');
+            $this->info('📡 URL: ' . config('services.customer_api.url') . '/api/internal/service-token');
 
             $response = Http::timeout(10)->post(
                 config('services.customer_api.url') . '/api/internal/service-token',
