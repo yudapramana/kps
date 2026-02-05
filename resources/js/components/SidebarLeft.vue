@@ -72,7 +72,7 @@ watch(
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- BRAND -->
     <a href="#" class="brand-link">
-      <img src="/app_logo.png" class="brand-image img-circle elevation-3" />
+      <img src="/symcardfavicon.ico" class="brand-image img-circle elevation-3" />
       <span class="brand-text font-weight-light">
         {{ settingStore.setting.app_name }}
       </span>

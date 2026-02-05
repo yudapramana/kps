@@ -51,8 +51,8 @@
     <!-- PWA  -->
     <meta name="theme-color" content="#6777ef" />
     <!-- Favicons -->
-    <link href="{{ asset('app_logo.png') }}" rel="icon">
-    <link rel="apple-touch-icon" href="{{ asset('app_logo.png') }}">
+    <link href="{{ asset('symcardfavicon.ico') }}" rel="icon">
+    <link rel="apple-touch-icon" href="{{ asset('symcardfavicon.ico') }}">
     <link rel="manifest" href="{{ asset('/manifest.json') }}">
     {{-- Test git pull push --}}
     <style>

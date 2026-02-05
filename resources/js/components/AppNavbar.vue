@@ -87,7 +87,7 @@ const environmentClass = computed(() =>
 
           <!-- EVENT NAME -->
           <strong class="text-sm">
-            {{ eventData?.slug || 'Event belum dipilih' }}
+            {{ eventData?.name || 'Event belum dipilih' }}
           </strong>
         </div>
       </li>

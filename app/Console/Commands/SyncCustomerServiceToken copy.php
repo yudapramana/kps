@@ -10,34 +10,24 @@ use Illuminate\Support\Facades\Crypt;
 
 class SyncCustomerServiceToken extends Command
 {
-    protected $signature = 'system:sync-customer-token';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'oldold:sync-customer-token';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Sync service token from Customer App and store it encrypted';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(): int
     {
         $this->info('🔄 Checking Customer API service token...');
 
         return DB::transaction(function () {
-
-            // =====================================
-            // 0️⃣ BYPASS MAINTENANCE MODE (IF ANY)
-            // =====================================
-            $baseUrl = rtrim(config('services.customer_api.url'), '/');
-            $secret  = 'kelakaronly'; // CUSTOMER_API_SECRET
-
-            if ($secret) {
-                $this->info('🛠 Checking Customer API maintenance status...');
-
-                $preflight = Http::timeout(5)->get("{$baseUrl}/{$secret}");
-
-                if ($preflight->status() === 503) {
-                    $this->error('❌ Customer API is in maintenance mode');
-                    return Command::FAILURE;
-                }
-
-                $this->info('✅ Customer API reachable (status: ' . $preflight->status() . ')');
-            }
 
             // =====================================
             // 1️⃣ CEK TOKEN SUDAH ADA
@@ -52,11 +42,11 @@ class SyncCustomerServiceToken extends Command
             // =====================================
             // 2️⃣ REQUEST TOKEN KE CUSTOMER APP
             // =====================================
-            $this->info('📡 Requesting new token from Customer App...');
-            $this->info('📡 URL: ' . $baseUrl . '/api/internal/service-token');
+            $this->info('📡 Requesting new token from Customer App... URL: ' . config('services.customer_api.url') . '/api/internal/service-token');
+            $this->info('📡 URL: ' . config('services.customer_api.url') . '/api/internal/service-token');
 
             $response = Http::timeout(10)->post(
-                $baseUrl . '/api/internal/service-token',
+                config('services.customer_api.url') . '/api/internal/service-token',
                 [
                     'service'   => 'admin-app',
                     'abilities' => ['read-payment-proof'],
@@ -84,10 +74,7 @@ class SyncCustomerServiceToken extends Command
                     'encrypted_token' => Crypt::encryptString($plainToken),
                 ]
             );
-
-            // ⚠️ biasanya ini jangan di production
             $this->info('Plain Token: ' . $plainToken);
-
             $this->info('🔐 Service token stored securely (encrypted)');
             $this->info('🎉 Sync completed successfully');
 

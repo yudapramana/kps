@@ -65,21 +65,76 @@ class AdminSecureFileController extends Controller
     //     return response()->json($response->json());
     // }
 
+    // public function paymentProof(int $paymentId)
+    // {
+    //     $service = ServiceAccount::where('name', 'Customer API')->firstOrFail();
+
+    //     \Log::info('Using service token', [
+    //         'token_preview' => substr($service->token, 0, 10) . '***'
+    //     ]);
+
+
+    //     // DEBUG OPTIONAL
+    //     abort_if(! $service->token, 500, 'Service token missing');
+
+    //     $response = Http::withToken($service->token)->get(
+    //         config('services.customer_api.url')
+    //         . "/api/secure/payments/proof/{$paymentId}/stream"
+    //     );
+
+    //     abort_if(! $response->successful(), 403, 'Customer API rejected');
+
+    //     $contentType = $response->header('Content-Type') ?? 'image/jpeg';
+    //     $body        = $response->body();
+
+    //     abort_if(empty($body), 500, 'Empty image stream from customer');
+
+    //     return response($body, 200, [
+    //         'Content-Type'  => $contentType,
+    //         'Cache-Control' => 'no-store',
+    //     ]);
+    // }
+
     public function paymentProof(int $paymentId)
     {
         $service = ServiceAccount::where('name', 'Customer API')->firstOrFail();
 
+        abort_if(! $service->token, 500, 'Service token missing');
+
+        $baseUrl = rtrim(config('services.customer_api.url'), '/');
+        $secret  = 'kelakaronly'; // sebaiknya pindah ke env/config
+
+        /*
+        |--------------------------------------------------------------------------
+        | PRE-FLIGHT CALL (BYPASS MAINTENANCE MODE)
+        |--------------------------------------------------------------------------
+        | Laravel maintenance secret HARUS lewat path: /{secret}
+        */
+
+        \Log::info('Start Using preflight', [
+            'url' => "{$baseUrl}/{$secret}"
+        ]);
+
+
+        $preflight = Http::get("{$baseUrl}/{$secret}");
+
+        if ($preflight->status() === 503) {
+            abort(503, 'Customer API in maintenance mode');
+        }
+
+        \Log::info('Customer API maintenance bypass success');
+
+        /*
+        |--------------------------------------------------------------------------
+        | MAIN REQUEST (TOKEN AUTH)
+        |--------------------------------------------------------------------------
+        */
         \Log::info('Using service token', [
             'token_preview' => substr($service->token, 0, 10) . '***'
         ]);
 
-
-        // DEBUG OPTIONAL
-        abort_if(! $service->token, 500, 'Service token missing');
-
         $response = Http::withToken($service->token)->get(
-            config('services.customer_api.url')
-            . "/api/secure/payments/proof/{$paymentId}/stream"
+            "{$baseUrl}/api/secure/payments/proof/{$paymentId}/stream"
         );
 
         abort_if(! $response->successful(), 403, 'Customer API rejected');
@@ -95,10 +150,7 @@ class AdminSecureFileController extends Controller
         ]);
     }
 
-    public function test()
-    {
-        return 'anjir';
-    }
+
 
 
 
