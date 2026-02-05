@@ -2,6 +2,16 @@
 import { ref, watch, onMounted, computed } from 'vue'
 import axios from 'axios'
 import { useAuthUserStore } from '../../stores/AuthUserStore'
+import Swal from 'sweetalert2'
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+})
+
 
 const authUserStore = useAuthUserStore()
 
@@ -40,27 +50,59 @@ const fetchData = async (page = 1) => {
   if (!eventId.value) return
 
   isLoading.value = true
-  const res = await axios.get('/api/v1/event-days', {
-    params: {
-      event_id: eventId.value,
-      per_page: perPage.value,
-      page,
-    },
-  })
+  try {
+    const res = await axios.get('/api/v1/event-days', {
+      params: {
+        event_id: eventId.value,
+        per_page: perPage.value,
+        page,
+      },
+    })
 
-  items.value = res.data.data.data
-  meta.value = res.data.data
-  isLoading.value = false
+    items.value = res.data.data.data
+    meta.value = res.data.data
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal memuat hari event',
+    })
+  } finally {
+    isLoading.value = false
+  }
 }
+
 
 /* =============================
  * ACTIONS
  * ============================= */
 const generateDays = async () => {
-  if (!confirm('Generate ulang hari event? Data lama akan dihapus.')) return
-  await axios.post(`/api/v1/event-days/generate/${eventId.value}`)
-  fetchData()
+  const result = await Swal.fire({
+    title: 'Generate ulang hari event?',
+    text: 'Data hari event lama akan dihapus',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, generate',
+    cancelButtonText: 'Batal',
+  })
+
+  if (!result.isConfirmed) return
+
+  try {
+    await axios.post(`/api/v1/event-days/generate/${eventId.value}`)
+    Toast.fire({
+      icon: 'success',
+      title: 'Hari event berhasil digenerate',
+    })
+    fetchData()
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal generate hari event',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
+  }
 }
+
 
 const openCreateModal = () => {
   isEdit.value = false
@@ -75,28 +117,64 @@ const openEditModal = (item) => {
 }
 
 const submitForm = async () => {
-  if (isEdit.value) {
-    await axios.put(`/api/v1/event-days/${form.value.id}`, form.value)
-  } else {
-    await axios.post('/api/v1/event-days', {
-      ...form.value,
-      event_id: eventId.value,
+  try {
+    if (isEdit.value) {
+      await axios.put(`/api/v1/event-days/${form.value.id}`, form.value)
+      Toast.fire({
+        icon: 'success',
+        title: 'Hari event berhasil diperbarui',
+      })
+    } else {
+      await axios.post('/api/v1/event-days', {
+        ...form.value,
+        event_id: eventId.value,
+      })
+      Toast.fire({
+        icon: 'success',
+        title: 'Hari event berhasil ditambahkan',
+      })
+    }
+
+    $('#eventDayModal').modal('hide')
+    fetchData(meta.value.current_page)
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal menyimpan hari event',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
     })
   }
-  $('#eventDayModal').modal('hide')
-  fetchData(meta.value.current_page)
 }
+
 
 const deleteItem = async (item) => {
-  if (!confirm('Hapus hari event ini?')) return
-  await axios.delete(`/api/v1/event-days/${item.id}`)
-  fetchData(meta.value.current_page)
+  const result = await Swal.fire({
+    title: 'Hapus hari event?',
+    text: `Tanggal ${item.date} akan dihapus`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, hapus',
+    cancelButtonText: 'Batal',
+  })
+
+  if (!result.isConfirmed) return
+
+  try {
+    await axios.delete(`/api/v1/event-days/${item.id}`)
+    Toast.fire({
+      icon: 'success',
+      title: 'Hari event berhasil dihapus',
+    })
+    fetchData(meta.value.current_page)
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal menghapus hari event',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
+  }
 }
 
-const changePage = (page) => {
-  if (page < 1 || page > meta.value.last_page) return
-  fetchData(page)
-}
 
 /* =============================
  * WATCHERS

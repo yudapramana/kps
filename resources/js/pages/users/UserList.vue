@@ -202,6 +202,16 @@
 import { ref, watch, onMounted } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import axios from 'axios'
+import Swal from 'sweetalert2'
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+})
+
 
 const items = ref([])
 const roles = ref([])
@@ -224,13 +234,22 @@ const form = ref({
 
 const fetchData = async (page = 1) => {
   isLoading.value = true
-  const res = await axios.get('/api/v1/users', {
-    params: { page, per_page: perPage.value, search: search.value },
-  })
-  items.value = res.data.data.data
-  meta.value = res.data.data
-  isLoading.value = false
+  try {
+    const res = await axios.get('/api/v1/users', {
+      params: { page, per_page: perPage.value, search: search.value },
+    })
+    items.value = res.data.data.data
+    meta.value = res.data.data
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal memuat data user',
+    })
+  } finally {
+    isLoading.value = false
+  }
 }
+
 
 const fetchRoles = async () => {
   const res = await axios.get('/api/v1/roles', { params: { simple: true } })
@@ -261,21 +280,63 @@ const openEditModal = (item) => {
 
 const submitForm = async () => {
   isSubmitting.value = true
-  if (isEdit.value) {
-    await axios.put(`/api/v1/users/${form.value.id}`, form.value)
-  } else {
-    await axios.post('/api/v1/users', form.value)
+  try {
+    if (isEdit.value) {
+      await axios.put(`/api/v1/users/${form.value.id}`, form.value)
+      Toast.fire({
+        icon: 'success',
+        title: 'User berhasil diperbarui',
+      })
+    } else {
+      await axios.post('/api/v1/users', form.value)
+      Toast.fire({
+        icon: 'success',
+        title: 'User berhasil ditambahkan',
+      })
+    }
+
+    $('#userModal').modal('hide')
+    fetchData(meta.value.current_page)
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal menyimpan user',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
+  } finally {
+    isSubmitting.value = false
   }
-  $('#userModal').modal('hide')
-  fetchData(meta.value.current_page)
-  isSubmitting.value = false
 }
 
+
 const deleteItem = async (item) => {
-  if (!confirm(`Hapus user "${item.name}"?`)) return
-  await axios.delete(`/api/v1/users/${item.id}`)
-  fetchData(meta.value.current_page)
+  const result = await Swal.fire({
+    title: 'Yakin ingin menghapus?',
+    text: `User "${item.name}" akan dihapus permanen`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, hapus',
+    cancelButtonText: 'Batal',
+  })
+
+  if (!result.isConfirmed) return
+
+  try {
+    await axios.delete(`/api/v1/users/${item.id}`)
+    Toast.fire({
+      icon: 'success',
+      title: 'User berhasil dihapus',
+    })
+    fetchData(meta.value.current_page)
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal menghapus user',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
+  }
 }
+
 
 const changePage = (page) => fetchData(page)
 

@@ -14,6 +14,10 @@ return [
     |
     */
 
+    'customer_api' => [
+        'url' => env('CUSTOMER_API_URL'),
+    ],
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),

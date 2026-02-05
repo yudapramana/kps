@@ -2,6 +2,15 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import axios from 'axios'
 import { useAuthUserStore } from '@/stores/AuthUserStore'
+import Swal from 'sweetalert2'
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+})
 
 /* ================= CONTEXT ================= */
 const authUserStore = useAuthUserStore()
@@ -31,18 +40,28 @@ const form = ref({
 const fetchData = async (page = 1) => {
   isLoading.value = true
 
-  const res = await axios.get('/api/v1/participant-categories', {
-    params: {
-      search: search.value,
-      per_page: perPage.value,
-      page,
-    },
-  })
+  try {
+    const res = await axios.get('/api/v1/participant-categories', {
+      params: {
+        search: search.value,
+        per_page: perPage.value,
+        page,
+      },
+    })
 
-  items.value = res.data.data.data
-  meta.value = res.data.data
-  isLoading.value = false
+    items.value = res.data.data.data
+    meta.value = res.data.data
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal memuat kategori peserta',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
+  } finally {
+    isLoading.value = false
+  }
 }
+
 
 /* ================= ACTIONS ================= */
 const openCreateModal = () => {
@@ -58,24 +77,64 @@ const openEditModal = (item) => {
 }
 
 const submitForm = async () => {
-  if (isEdit.value) {
-    await axios.put(
-      `/api/v1/participant-categories/${form.value.id}`,
-      form.value
-    )
-  } else {
-    await axios.post('/api/v1/participant-categories', form.value)
-  }
+  try {
+    if (isEdit.value) {
+      await axios.put(
+        `/api/v1/participant-categories/${form.value.id}`,
+        form.value
+      )
+      Toast.fire({
+        icon: 'success',
+        title: 'Kategori peserta berhasil diperbarui',
+      })
+    } else {
+      await axios.post('/api/v1/participant-categories', form.value)
+      Toast.fire({
+        icon: 'success',
+        title: 'Kategori peserta berhasil ditambahkan',
+      })
+    }
 
-  $('#participantCategoryModal').modal('hide')
-  fetchData(meta.value.current_page)
+    $('#participantCategoryModal').modal('hide')
+    fetchData(meta.value.current_page)
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal menyimpan kategori',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
+  }
 }
+
 
 const deleteItem = async (item) => {
-  if (!confirm(`Hapus kategori "${item.name}"?`)) return
-  await axios.delete(`/api/v1/participant-categories/${item.id}`)
-  fetchData(meta.value.current_page)
+  const result = await Swal.fire({
+    title: 'Hapus kategori?',
+    text: `Kategori "${item.name}" akan dihapus`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, hapus',
+    cancelButtonText: 'Batal',
+  })
+
+  if (!result.isConfirmed) return
+
+  try {
+    await axios.delete(`/api/v1/participant-categories/${item.id}`)
+    Toast.fire({
+      icon: 'success',
+      title: 'Kategori peserta berhasil dihapus',
+    })
+    fetchData(meta.value.current_page)
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal menghapus kategori',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
+  }
 }
+
 
 const changePage = (page) => {
   if (page < 1 || page > meta.value.last_page) return

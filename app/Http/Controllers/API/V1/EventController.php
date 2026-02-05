@@ -5,12 +5,13 @@ namespace App\Http\Controllers\API\V1;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use App\Models\ServiceAccount;
 
 class EventController extends Controller
 {
     /**
      * GET /api/v1/events
-     * List + search + pagination
      */
     public function index(Request $request)
     {
@@ -38,21 +39,34 @@ class EventController extends Controller
 
     /**
      * POST /api/v1/events
-     * Store
      */
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'                 => ['required', 'string', 'max:255'],
-            'theme'                => ['nullable', 'string'],
-            'description'          => ['nullable', 'string'],
-            'early_bird_end_date'  => ['nullable', 'date'],
-            'start_date'           => ['required', 'date'],
-            'end_date'             => ['required', 'date', 'after_or_equal:start_date'],
-            'location'             => ['nullable', 'string'],
-            'venue'                => ['nullable', 'string'],
-            'is_active'             => ['boolean'],
+            'name'                    => ['required', 'string', 'max:255'],
+            'theme'                   => ['nullable', 'string'],
+            'description'             => ['nullable', 'string'],
+
+            'start_date'              => ['required', 'date'],
+            'end_date'                => ['required', 'date', 'after_or_equal:start_date'],
+            'early_bird_end_date'     => ['nullable', 'date'],
+
+            // SUBMISSION TIMELINE
+            'submission_open_at'      => ['nullable', 'date'],
+            'submission_deadline_at'  => ['nullable', 'date', 'after_or_equal:submission_open_at'],
+            'notification_date'       => ['nullable', 'date'],
+            'submission_close_at'     => ['nullable', 'date'],
+
+            // CONTROL
+            'submission_is_active'    => ['boolean'],
+
+            'location'                => ['nullable', 'string'],
+            'venue'                   => ['nullable', 'string'],
+            'is_active'               => ['boolean'],
         ]);
+
+        // slug otomatis
+        $data['slug'] = Str::slug($data['name']);
 
         $event = Event::create($data);
 
@@ -64,21 +78,36 @@ class EventController extends Controller
 
     /**
      * PUT /api/v1/events/{event}
-     * Update
      */
     public function update(Request $request, Event $event)
     {
         $data = $request->validate([
-            'name'                 => ['required', 'string', 'max:255'],
-            'theme'                => ['nullable', 'string'],
-            'description'          => ['nullable', 'string'],
-            'early_bird_end_date'  => ['nullable', 'date'],
-            'start_date'           => ['required', 'date'],
-            'end_date'             => ['required', 'date', 'after_or_equal:start_date'],
-            'location'             => ['nullable', 'string'],
-            'venue'                => ['nullable', 'string'],
-            'is_active'             => ['boolean'],
+            'name'                    => ['required', 'string', 'max:255'],
+            'theme'                   => ['nullable', 'string'],
+            'description'             => ['nullable', 'string'],
+
+            'start_date'              => ['required', 'date'],
+            'end_date'                => ['required', 'date', 'after_or_equal:start_date'],
+            'early_bird_end_date'     => ['nullable', 'date'],
+
+            // SUBMISSION TIMELINE
+            'submission_open_at'      => ['nullable', 'date'],
+            'submission_deadline_at'  => ['nullable', 'date', 'after_or_equal:submission_open_at'],
+            'notification_date'       => ['nullable', 'date'],
+            'submission_close_at'     => ['nullable', 'date'],
+
+            // CONTROL
+            'submission_is_active'    => ['boolean'],
+
+            'location'                => ['nullable', 'string'],
+            'venue'                   => ['nullable', 'string'],
+            'is_active'               => ['boolean'],
         ]);
+
+        // update slug kalau nama berubah
+        if ($data['name'] !== $event->name) {
+            $data['slug'] = Str::slug($data['name']);
+        }
 
         $event->update($data);
 
@@ -102,7 +131,6 @@ class EventController extends Controller
 
     /**
      * GET /api/v1/events/active
-     * Ambil 1 event yang sedang aktif
      */
     public function getEventActive()
     {
@@ -110,10 +138,25 @@ class EventController extends Controller
             ->orderByDesc('start_date')
             ->first();
 
+        if (! $event) {
+            return response()->json([
+                'success' => true,
+                'data' => null,
+            ]);
+        }
+
+        $service = ServiceAccount::where('name', 'Customer API')->first();
+
+        $event->service = $service
+            ? [
+                'name'  => $service->name,
+                'token' => $service->token,
+            ]
+            : null;
+
         return response()->json([
             'success' => true,
             'data' => $event,
         ]);
     }
-
 }

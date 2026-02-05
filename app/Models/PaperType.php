@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class PaperType extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'code',
+        'name',
+        'description',
+    ];
 
     public function papers()
     {

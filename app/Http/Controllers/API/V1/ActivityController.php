@@ -10,19 +10,27 @@ class ActivityController extends Controller
 {
     public function index(Request $request)
     {
-        $search  = $request->get('search');
-        $eventId = $request->get('event_id');
-        $perPage = (int) ($request->get('per_page') ?? 10);
+        $search   = $request->get('search');
+        $eventId  = $request->get('event_id');
+        $category = $request->get('category');
+        $perPage  = (int) ($request->get('per_page') ?? 10);
 
-        $query = Activity::with('topics', 'event')->orderBy('category');
+        $query = Activity::with('topics', 'event')
+            ->orderBy('category');
 
         if ($eventId) {
             $query->where('event_id', $eventId);
         }
 
+        if ($category) {
+            $query->where('category', $category); // ⬅️ FILTER CATEGORY
+        }
+
         if ($search) {
-            $query->where('title', 'like', "%{$search}%")
-                  ->orWhere('code', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                ->orWhere('code', 'like', "%{$search}%");
+            });
         }
 
         return response()->json([
@@ -30,6 +38,7 @@ class ActivityController extends Controller
             'data' => $query->paginate($perPage),
         ]);
     }
+
 
     public function store(Request $request)
     {

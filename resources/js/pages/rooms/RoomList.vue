@@ -193,6 +193,16 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import axios from 'axios'
 import { useAuthUserStore } from '@/stores/AuthUserStore'
+import Swal from 'sweetalert2'
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+})
+
 
 const authUserStore = useAuthUserStore()
 
@@ -218,19 +228,28 @@ const fetchData = async (page = 1) => {
   if (!eventId.value) return
 
   isLoading.value = true
-  const res = await axios.get('/api/v1/rooms', {
-    params: {
-      page,
-      per_page: perPage.value,
-      search: search.value,
-      event_id: eventId.value,
-    },
-  })
+  try {
+    const res = await axios.get('/api/v1/rooms', {
+      params: {
+        page,
+        per_page: perPage.value,
+        search: search.value,
+        event_id: eventId.value,
+      },
+    })
 
-  items.value = res.data.data.data
-  meta.value  = res.data.data
-  isLoading.value = false
+    items.value = res.data.data.data
+    meta.value  = res.data.data
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal memuat data ruangan',
+    })
+  } finally {
+    isLoading.value = false
+  }
 }
+
 
 const openCreateModal = () => {
   isEdit.value = false
@@ -252,22 +271,63 @@ const submitForm = async () => {
     event_id: eventId.value,
   }
 
-  if (isEdit.value) {
-    await axios.put(`/api/v1/rooms/${form.value.id}`, payload)
-  } else {
-    await axios.post('/api/v1/rooms', payload)
-  }
+  try {
+    if (isEdit.value) {
+      await axios.put(`/api/v1/rooms/${form.value.id}`, payload)
+      Toast.fire({
+        icon: 'success',
+        title: 'Ruangan berhasil diperbarui',
+      })
+    } else {
+      await axios.post('/api/v1/rooms', payload)
+      Toast.fire({
+        icon: 'success',
+        title: 'Ruangan berhasil ditambahkan',
+      })
+    }
 
-  $('#roomModal').modal('hide')
-  fetchData(meta.value.current_page)
-  isSubmitting.value = false
+    $('#roomModal').modal('hide')
+    fetchData(meta.value.current_page)
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal menyimpan ruangan',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
+  } finally {
+    isSubmitting.value = false
+  }
 }
+
 
 const deleteItem = async (item) => {
-  if (!confirm(`Hapus ruangan "${item.name}"?`)) return
-  await axios.delete(`/api/v1/rooms/${item.id}`)
-  fetchData(meta.value.current_page)
+  const result = await Swal.fire({
+    title: 'Hapus ruangan?',
+    text: `Ruangan "${item.name}" akan dihapus`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, hapus',
+    cancelButtonText: 'Batal',
+  })
+
+  if (!result.isConfirmed) return
+
+  try {
+    await axios.delete(`/api/v1/rooms/${item.id}`)
+    Toast.fire({
+      icon: 'success',
+      title: 'Ruangan berhasil dihapus',
+    })
+    fetchData(meta.value.current_page)
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal menghapus ruangan',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
+  }
 }
+
 
 const changePage = (page) => {
   if (page < 1 || page > meta.value.last_page) return

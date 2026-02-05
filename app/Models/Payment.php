@@ -29,4 +29,9 @@ class Payment extends Model
     {
         return $this->hasOne(PaymentVerification::class);
     }
+
+    public function verifications()
+    {
+        return $this->hasMany(PaymentVerification::class, 'payment_id');
+    }
 }

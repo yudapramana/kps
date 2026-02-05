@@ -4,11 +4,26 @@ namespace App\Enums;
 
 enum RoleType: int
 {
+    // =========================
+    // SYSTEM LEVEL
+    // =========================
     case SUPERADMIN = 1;
-    case ADMIN_EVENT = 2;
-    case PENDAFTARAN = 3;
-    case VERIFIKATOR = 4;
-    case DEWAN_HAKIM = 5;
-    case PANITERA = 6;
-    case USER = 7;
+
+    // =========================
+    // ADMIN LEVEL
+    // =========================
+    case MASTER_ADMIN  = 2;
+    case FINANCE_ADMIN = 3;
+    case CONTENT_ADMIN = 4;
+    case SCIENCE_ADMIN = 5;
+
+    // =========================
+    // OPERATIONAL
+    // =========================
+    case COMMITTEE = 6;
+
+    // =========================
+    // END USER
+    // =========================
+    case PARTICIPANT = 7;
 }

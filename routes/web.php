@@ -39,10 +39,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use App\Models\EventLocation;
-
-
-
-
+use App\Models\ServiceAccount;
 
 Route::get('/event-venues', function () {
 
@@ -1386,7 +1383,7 @@ Route::get('/', function () {
 
 
 Route::get('/get-password', function () {
-    return 'apasih';
+    return 'apasih eh';
     // bcrypt('12345678');
 });
 
@@ -1512,4 +1509,50 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::get('{view}', ApplicationController::class)->where('view', '(.*)')->middleware('auth');
+// Route::get('{view}', ApplicationController::class)->where('view', '(.*)')->middleware('auth');
+
+// routes/web.php
+
+// ⛔ SEMUA ROUTE WEB NORMAL DI ATAS
+
+Route::get('{view}', ApplicationController::class)
+    ->where('view', '^(?!api).*$') // 🔥 PENTING
+    ->middleware('auth');
+
+
+
+// Route::get('/api/get-password', function () {
+//     return 'apasih eh dibawah view';
+//     // bcrypt('12345678');
+// });
+
+// Route::middleware('auth')->get(
+//     '/api/v1/secure/payments/proof/{paymentId}',
+//     [\App\Http\Controllers\API\V1\AdminSecureFileController::class, 'paymentProof']
+// );
+
+// Route::middleware('auth')->get(
+//     '/api/v1/kokraiso', function () {
+//     $service = ServiceAccount::where('name', 'Customer API')->firstOrFail();
+
+//      abort_if(! $service->token, 500, 'Service token missing');
+
+//         $response = \Illuminate\Support\Facades\Http::withToken($service->token)->get(
+//             config('services.customer_api.url')
+//             . "/api/secure/payments/proof/1/stream"
+//         );
+
+//         abort_if(! $response->successful(), 403, 'Customer API rejected');
+
+//         $contentType = $response->header('Content-Type') ?? 'image/jpeg';
+//         $body        = $response->body();
+
+//         abort_if(empty($body), 500, 'Empty image stream from customer');
+
+//         return response($body, 200, [
+//             'Content-Type'  => $contentType,
+//             'Cache-Control' => 'no-store',
+//         ]);
+
+//     return $service;
+// });

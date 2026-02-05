@@ -1,0 +1,1 @@
+import{ar as o,aq as _}from"./pinia-BDOwh8JO.js";import a from"./Landing-D-_Z5PiS.js";const i=window.__INITIAL_EVENTS__||[],t=window.__LOGIN_URL__||"/login",n=o(a,{events:i,loginUrl:t}),p=_();n.use(p);n.mount("#app");

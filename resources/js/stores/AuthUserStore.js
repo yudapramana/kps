@@ -79,6 +79,16 @@ export const useAuthUserStore = defineStore('AuthUserStore', () => {
         return perms.includes(permission);
     };
 
+    const canAny = (permissions = []) => {
+        const u = user.value;
+        if (!u || !u.role) return false;
+        if (u.role.slug === 'superadmin') return true;
+
+        const perms = Array.isArray(u.permissions) ? u.permissions : [];
+        return permissions.some(p => perms.includes(p));
+    };
+
+
     const myDocuments = useStorage('AuthUserStore:myDocuments', ref([]));
     const userDocuments = ref([]);
     const isAdminRole = useStorage('AuthUserStore:isAdminRole', ref(false));
@@ -322,7 +332,8 @@ export const useAuthUserStore = defineStore('AuthUserStore', () => {
         switchLayout,
         handleAuthError,
         syncFilesIndividual,
-        can
+        can,
+        canAny
     };
 
 });

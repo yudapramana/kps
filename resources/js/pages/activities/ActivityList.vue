@@ -2,6 +2,15 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import axios from 'axios'
 import { useAuthUserStore } from '../../stores/AuthUserStore'
+import Swal from 'sweetalert2'
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+})
 
 const authUserStore = useAuthUserStore()
 
@@ -21,6 +30,8 @@ const isEdit = ref(false)
 
 const expanded = ref({})
 const newTopic = ref({})
+const filterCategory = ref('')
+
 
 const meta = ref({
   current_page: 1,
@@ -50,27 +61,36 @@ const form = ref({
 const fetchData = async (page = 1) => {
   if (!eventId.value) return
 
-  const res = await axios.get('/api/v1/activities', {
-    params: {
-      page,
-      per_page: perPage.value,
-      search: search.value,
-      event_id: eventId.value,
-    },
-  })
+  try {
+    const res = await axios.get('/api/v1/activities', {
+      params: {
+        page,
+        per_page: perPage.value,
+        search: search.value,
+        event_id: eventId.value,
+        category: filterCategory.value, 
+      },
+    })
 
-  items.value = res.data.data.data
-  meta.value = res.data.data
+    items.value = res.data.data.data
+    meta.value = res.data.data
 
-  items.value.forEach(a => {
-    expanded.value[a.id] = expanded.value[a.id] ?? false
-    newTopic.value[a.id] = {
-      title: '',
-      type: 'lecture',
-      order: a.topics.length + 1,
-    }
-  })
+    items.value.forEach(a => {
+      expanded.value[a.id] = expanded.value[a.id] ?? false
+      newTopic.value[a.id] = {
+        title: '',
+        type: 'lecture',
+        order: a.topics.length + 1,
+      }
+    })
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal memuat activity',
+    })
+  }
 }
+
 
 /* =============================
  * PAGINATION
@@ -96,23 +116,55 @@ const openEditModal = (item) => {
 }
 
 const submitForm = async () => {
-  if (isEdit.value) {
-    await axios.put(`/api/v1/activities/${form.value.id}`, form.value)
-  } else {
-    await axios.post('/api/v1/activities', {
-      ...form.value,
-      event_id: eventId.value,
+  try {
+    if (isEdit.value) {
+      await axios.put(`/api/v1/activities/${form.value.id}`, form.value)
+      Toast.fire({ icon: 'success', title: 'Activity berhasil diperbarui' })
+    } else {
+      await axios.post('/api/v1/activities', {
+        ...form.value,
+        event_id: eventId.value,
+      })
+      Toast.fire({ icon: 'success', title: 'Activity berhasil ditambahkan' })
+    }
+
+    $('#activityModal').modal('hide')
+    fetchData(meta.value.current_page)
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal menyimpan activity',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
     })
   }
-  $('#activityModal').modal('hide')
-  fetchData(meta.value.current_page)
 }
 
+
 const deleteItem = async (item) => {
-  if (!confirm('Hapus activity ini?')) return
-  await axios.delete(`/api/v1/activities/${item.id}`)
-  fetchData(meta.value.current_page)
+  const result = await Swal.fire({
+    title: 'Hapus activity?',
+    text: `Activity "${item.title}" akan dihapus`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, hapus',
+    cancelButtonText: 'Batal',
+  })
+
+  if (!result.isConfirmed) return
+
+  try {
+    await axios.delete(`/api/v1/activities/${item.id}`)
+    Toast.fire({ icon: 'success', title: 'Activity berhasil dihapus' })
+    fetchData(meta.value.current_page)
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal menghapus activity',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
+  }
 }
+
 
 /* =============================
  * TOPICS CRUD
@@ -123,24 +175,73 @@ const toggleTopics = (id) => {
 
 const addTopic = async (activityId) => {
   const payload = newTopic.value[activityId]
-  if (!payload.title) return
+  if (!payload.title) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Judul topik wajib diisi',
+    })
+    return
+  }
 
-  await axios.post('/api/v1/activity-topics', {
-    ...payload,
-    activity_id: activityId,
-  })
-  fetchData(meta.value.current_page)
+  try {
+    await axios.post('/api/v1/activity-topics', {
+      ...payload,
+      activity_id: activityId,
+    })
+    Toast.fire({ icon: 'success', title: 'Topik berhasil ditambahkan' })
+    fetchData(meta.value.current_page)
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal menambah topik',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
+  }
 }
+
 
 const updateTopic = async (topic) => {
-  await axios.put(`/api/v1/activity-topics/${topic.id}`, topic)
+  try {
+    await axios.put(`/api/v1/activity-topics/${topic.id}`, topic)
+    Toast.fire({
+      icon: 'success',
+      title: 'Topik diperbarui',
+    })
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal memperbarui topik',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
+  }
 }
 
+
 const deleteTopic = async (topic) => {
-  if (!confirm('Hapus topik ini?')) return
-  await axios.delete(`/api/v1/activity-topics/${topic.id}`)
-  fetchData(meta.value.current_page)
+  const result = await Swal.fire({
+    title: 'Hapus topik?',
+    text: `Topik "${topic.title}" akan dihapus`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, hapus',
+    cancelButtonText: 'Batal',
+  })
+
+  if (!result.isConfirmed) return
+
+  try {
+    await axios.delete(`/api/v1/activity-topics/${topic.id}`)
+    Toast.fire({ icon: 'success', title: 'Topik berhasil dihapus' })
+    fetchData(meta.value.current_page)
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal menghapus topik',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
+  }
 }
+
 
 /* =============================
  * WATCHERS
@@ -148,6 +249,8 @@ const deleteTopic = async (topic) => {
 watch(search, () => fetchData(1))
 watch(perPage, () => fetchData(1))
 watch(eventId, () => fetchData(1))
+watch(filterCategory, () => fetchData(1))
+
 
 onMounted(() => {
   fetchData()
@@ -191,9 +294,24 @@ onMounted(() => {
                 <option :value="25">25</option>
                 <option :value="50">50</option>
               </select>
-              <span class="text-sm text-muted ml-1">Entri</span>
+              <span class="text-sm text-muted ml-1 mr-2">Entri</span>
+
+              |
+              <select
+                v-model="filterCategory"
+                class="form-control form-control-sm d-inline-block w-auto ml-2"
+                style="min-width:160px"
+              >
+                <option value="">Semua Kategori</option>
+                <option v-for="c in categories" :key="c" :value="c">
+                  {{ c }}
+                </option>
+              </select>
+              
+
             </div>
 
+            
             <input
               v-model="search"
               type="text"

@@ -2,6 +2,15 @@
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
 import { useRoute } from 'vue-router'
+import Swal from 'sweetalert2'
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+})
 
 const route = useRoute()
 
@@ -34,23 +43,31 @@ const fetchData = async () => {
   if (!selectedEventDay.value) return
 
   isLoading.value = true
+  try {
+    const res = await axios.get('/api/v1/sessions', {
+      params: {
+        event_day_id: selectedEventDay.value,
+        room_id: activeRoomId.value,
+      },
+    })
 
-  const res = await axios.get('/api/v1/sessions', {
-    params: {
-      event_day_id: selectedEventDay.value,
-      room_id: activeRoomId.value,
-    },
-  })
-
-  items.value = res.data.data.sessions
-  rooms.value = res.data.data.rooms
-  activities.value = res.data.data.activities
-  event.value = res.data.data.event
-  eventDay.value = res.data.data.event_day
-  eventDays.value = res.data.data.event_days
-
-  isLoading.value = false
+    items.value = res.data.data.sessions
+    rooms.value = res.data.data.rooms
+    activities.value = res.data.data.activities
+    event.value = res.data.data.event
+    eventDay.value = res.data.data.event_day
+    eventDays.value = res.data.data.event_days
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal memuat session',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
+  } finally {
+    isLoading.value = false
+  }
 }
+
 
 /* ================= ACTIONS ================= */
 const openCreateModal = () => {
@@ -72,23 +89,64 @@ const openEditModal = (item) => {
 }
 
 const submitForm = async () => {
-  if (isEdit.value) {
-    await axios.put(`/api/v1/sessions/${form.value.id}`, form.value)
-  } else {
-    await axios.post('/api/v1/sessions', {
-      ...form.value,
-      event_day_id: selectedEventDay.value,
+  try {
+    if (isEdit.value) {
+      await axios.put(`/api/v1/sessions/${form.value.id}`, form.value)
+      Toast.fire({
+        icon: 'success',
+        title: 'Session berhasil diperbarui',
+      })
+    } else {
+      await axios.post('/api/v1/sessions', {
+        ...form.value,
+        event_day_id: selectedEventDay.value,
+      })
+      Toast.fire({
+        icon: 'success',
+        title: 'Session berhasil ditambahkan',
+      })
+    }
+
+    $('#sessionModal').modal('hide')
+    fetchData()
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal menyimpan session',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
     })
   }
-  $('#sessionModal').modal('hide')
-  fetchData()
 }
 
+
 const deleteItem = async (item) => {
-  if (!confirm('Hapus session ini?')) return
-  await axios.delete(`/api/v1/sessions/${item.id}`)
-  fetchData()
+  const result = await Swal.fire({
+    title: 'Hapus session?',
+    text: `Session ${item.start_time} - ${item.end_time} akan dihapus`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, hapus',
+    cancelButtonText: 'Batal',
+  })
+
+  if (!result.isConfirmed) return
+
+  try {
+    await axios.delete(`/api/v1/sessions/${item.id}`)
+    Toast.fire({
+      icon: 'success',
+      title: 'Session berhasil dihapus',
+    })
+    fetchData()
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal menghapus session',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
+  }
 }
+
 
 /* ================= ROOM FILTER ================= */
 const toggleRoom = (roomId) => {
@@ -101,7 +159,10 @@ watch(selectedEventDay, () => {
   fetchData()
 })
 
-watch(activeRoomId, fetchData)
+watch(activeRoomId, () => {
+  fetchData()
+})
+
 
 /* ================= INIT ================= */
 onMounted(async () => {

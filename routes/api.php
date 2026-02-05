@@ -14,6 +14,7 @@ use App\Http\Controllers\API\LocationController;
 use App\Http\Controllers\API\PublicEventController;
 use App\Http\Controllers\API\V1\ActivityController;
 use App\Http\Controllers\API\V1\ActivityTopicController;
+use App\Http\Controllers\API\V1\BankController;
 use App\Http\Controllers\API\V1\BranchController;
 use App\Http\Controllers\API\V1\CategoryController;
 use App\Http\Controllers\API\V1\EventBranchController;
@@ -49,9 +50,16 @@ use App\Http\Controllers\API\V1\MasterFieldComponentController;
 use App\Http\Controllers\API\V1\MasterGroupController;
 use App\Http\Controllers\API\V1\MasterJudgeController;
 use App\Http\Controllers\API\V1\MedalRuleController;
+use App\Http\Controllers\API\V1\PaperFinalController;
+use App\Http\Controllers\API\V1\PaperReviewController;
+use App\Http\Controllers\API\V1\PaperTypeController;
 use App\Http\Controllers\API\V1\ParticipantCategoryController;
 use App\Http\Controllers\API\V1\ParticipantController;
 use App\Http\Controllers\API\V1\ParticipantVerificationController;
+use App\Http\Controllers\API\V1\PaymentController;
+use App\Http\Controllers\API\V1\PaymentVerificationController;
+use App\Http\Controllers\API\V1\PricingItemController;
+use App\Http\Controllers\API\V1\RegistrationController;
 use App\Http\Controllers\API\V1\RoomController;
 use App\Http\Controllers\API\V1\SessionController;
 use App\Http\Controllers\API\V1\StageController;
@@ -94,11 +102,32 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['throttle:60,1'])->get('/public-events', [PublicEventController::class, 'index']);
 });
 
+Route::post(
+    '/internal/sync-service-token',
+    [\App\Http\Controllers\API\Internal\ServiceTokenController::class, 'sync']
+)->middleware('auth:sanctum');
+
+Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
+});
+
 Route::middleware(['auth:sanctum']) // kalau belum pakai sanctum, boleh dihapus dulu
     ->prefix('v1')
     ->group(function () {
 
+        Route::apiResource('paper-types', PaperTypeController::class)->except(['show']);
+        Route::get('papers/final', [PaperFinalController::class, 'index']);
+        Route::put('papers/{paper}/final', [PaperFinalController::class, 'update']);
+        Route::get('papers/review', [PaperReviewController::class, 'index']);
+        Route::put('papers/{paper}/review', [PaperReviewController::class, 'review']);
 
+        Route::get(
+            '/finance/dashboard',
+            [\App\Http\Controllers\API\V1\FinanceDashboardController::class, 'index']
+        );
+        Route::get(
+            '/secure/payments/proof/{paymentId}',
+            [\App\Http\Controllers\API\V1\AdminSecureFileController::class, 'paymentProof']
+        );
         Route::apiResource('users',                     UserController::class);
         Route::get('/events/active',                   [EventController::class, 'getEventActive']);
         Route::apiResource('events',                    EventController::class);
@@ -110,8 +139,18 @@ Route::middleware(['auth:sanctum']) // kalau belum pakai sanctum, boleh dihapus 
         Route::apiResource('sessions',                  SessionController::class)->except(['show']);
         Route::apiResource('participant-categories',    ParticipantCategoryController::class);
         Route::get('participants',                     [ParticipantController::class, 'index']);
-
-
+        Route::apiResource('pricing-items',             PricingItemController::class);
+        Route::apiResource('banks',                     BankController::class);
+        Route::get('registrations',                    [RegistrationController::class, 'index']);
+        Route::get('/payments',                        [PaymentController::class, 'index']);
+        Route::put('/payments/{payment}',              [PaymentController::class, 'update']);
+        Route::get('/payment-verifications/queue',                    [PaymentVerificationController::class, 'queue']);
+        Route::post('/payment-verifications/{payment}/verify',  [PaymentVerificationController::class, 'verify']);
+        Route::get('/payment-verifications/history', [PaymentVerificationController::class,'history']);
+        Route::get(
+            '/payments/proof/{payment}',
+            [\App\Http\Controllers\API\V1\SecurePaymentProofController::class, 'show']
+        )->name('api.secure.payment-proof');
 
         Route::get('/events/{event}/build-progress', function ($eventId) {
             return DB::table('event_build_logs')

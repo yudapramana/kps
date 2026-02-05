@@ -26,4 +26,9 @@ class Paper extends Model
     {
         return $this->hasMany(PaperAuthor::class);
     }
+
+    public function paper_type()
+    {
+        return $this->belongsTo(PaperType::class, 'paper_type_id');
+    }
 }

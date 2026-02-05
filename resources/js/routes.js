@@ -31,6 +31,11 @@ export default [
         component: () => import('./pages/users/UserList.vue'),
       },
       {
+        path: 'permissions',
+        name: 'admin.permissions',
+        component: () => import('./pages/permission/PermissionRoleList.vue'),
+      },
+      {
         path: 'events',
         name: 'admin.events',
         component: () => import('./pages/events/EventList.vue'),
@@ -65,6 +70,65 @@ export default [
         name: 'admin.participants',
         component: () => import('./pages/participants/ParticipantList.vue'),
       },
+      {
+        path: 'pricing',
+        name: 'admin.pricing',
+        component: () => import('./pages/pricing/PricingItemList.vue'),
+      },
+      {
+        path: 'banks',
+        name: 'admin.banks',
+        component: () => import('./pages/banks/BankList.vue'),
+      },
+      {
+        path: 'registrations',
+        name: 'admin.registrations',
+        component: () => import('./pages/registrations/RegistrationList.vue'),
+      },
+      {
+        path: 'payments',
+        name: 'admin.payments',
+        component: () => import('./pages/payments/PaymentList.vue'),
+      },
+      {
+        path: 'payment-verifications-queue',
+        name: 'admin.payment-verifications.queue',
+        component: () => import('./pages/payments/PaymentVerificationQueue.vue'),
+      },
+      {
+        path: 'payment-verifications-history',
+        name: 'admin.payment-verifications.history',
+        component: () => import('./pages/payments/PaymentVerificationHistory.vue'),
+      },
+      {
+        path: 'finance-dashboard',
+        name: 'admin.finance.dashboard',
+        component: () => import('./pages/finance/FinanceDashboard.vue'),
+      },
+      {
+        path: 'paper-types',
+        name: 'admin.paper-types',
+        component: () => import('./pages/papers/PaperTypeList.vue'),
+      },
+      {
+        path: 'papers/review',
+        name: 'admin.papers.review',
+        component: () => import('./pages/papers/PaperReviewList.vue'),
+      },
+      {
+        path: 'papers/final',
+        name: 'admin.papers.final',
+        component: () => import('./pages/papers/PaperFinalList.vue'),
+      },
+
+
+
+
+
+
+      
+
+
 
 
 
@@ -96,11 +160,7 @@ export default [
         name: 'admin.core.fields',
         component: () => import('./pages/core/CoreListFields.vue'),
       },
-      {
-        path: 'core/permissions',
-        name: 'admin.core.permissions',
-        component: () => import('./pages/permission/PermissionRoleList.vue'),
-      },
+      
       {
         path: 'core/medal-rules',
         name: 'admin.core.medal-rules',
@@ -299,6 +359,7 @@ export default [
           title: 'Perolehan Juara Kontingen',
         },
       },
+      
 
 
 

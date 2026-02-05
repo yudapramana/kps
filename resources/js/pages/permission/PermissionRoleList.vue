@@ -237,55 +237,36 @@ const fetchPermissions = async () => {
 // GROUPING (SESUAI PERMISSIONS BARU)
 // =====================================================
 const GROUP_TITLES = {
-  'manage.core': 'CORE',
   'manage.master': 'MASTER DATA',
   'manage.event': 'EVENT',
-  'manage.event.participant': 'PESERTA',
-  'manage.event.judges': 'HAKIM',
-  'manage.event.scoring': 'PENILAIAN',
-  'manage.event.scores': 'REKAP NILAI',
-  'manage.event.ranking': 'RANKING',
-  'manage.event.results': 'PEROLEHAN JUARA',
+  'manage.pricing': 'PRICING',
+  'manage.payment-verifications': 'PAYMENT VERIFICATIONS',
 }
 
 const GROUP_ORDER = [
-  'manage.core',
   'manage.master',
   'manage.event',
-  'manage.event.participant',
-  'manage.event.judges',
-  'manage.event.scoring',
-  'manage.event.scores',
-  'manage.event.ranking',
-  'manage.event.results',
+  'manage.pricing',
+  'manage.payment-verifications'
+  
 ]
 
 // slug menu yang level “menu” (bukan halaman spesifik)
 const MENU_SLUGS = new Set([
-  'manage.core',
   'manage.master',
   'manage.event',
-  'manage.event.participant',
-  'manage.event.judges',
-  'manage.event.scoring',
-  'manage.event.scores',
-  'manage.event.ranking',
-  'manage.event.results',
+  'manage.pricing',
+  'manage.payment-verifications'
 ])
 
 const getGroupKeyFromSlug = (slug = '') => {
   const s = String(slug || '')
 
-  // paling spesifik dulu
-  if (s.startsWith('manage.event.participant')) return 'manage.event.participant'
-  if (s.startsWith('manage.event.judges')) return 'manage.event.judges'
-  if (s.startsWith('manage.event.scoring')) return 'manage.event.scoring'
-  if (s.startsWith('manage.event.scores')) return 'manage.event.scores'
-  if (s.startsWith('manage.event.ranking')) return 'manage.event.ranking'
-  if (s.startsWith('manage.event.results')) return 'manage.event.results'
+ 
 
+  if (s.startsWith('manage.payment-verifications')) return 'manage.payment-verifications'
+  if (s.startsWith('manage.pricing')) return 'manage.pricing'
   if (s.startsWith('manage.event')) return 'manage.event'
-  if (s.startsWith('manage.core')) return 'manage.core'
   if (s.startsWith('manage.master')) return 'manage.master'
   return 'other'
 }
