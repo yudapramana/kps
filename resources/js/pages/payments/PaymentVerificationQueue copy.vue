@@ -170,28 +170,27 @@
               class="d-flex justify-content-center align-items-center"
               style="height: 360px;"
             >
-              <div class="spinner-border text-primary"></div>
+              <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
             </div>
 
             <!-- IMAGE -->
             <img
-              v-if="selected.cloudinary_proof_url"
-              :key="selected.id"
-              :src="selected.cloudinary_proof_url"
+              v-show="!proofLoading && !proofError"
+              :src="`/api/v1/secure/payments/proof/${selected.id}`"
               class="img-fluid rounded border"
               style="max-height:360px"
-              v-show="!proofLoading"
               @load="proofLoading = false"
-              @error="handleProofError"
+              @error="
+                proofLoading = false;
+                proofError = true;
+                Toast.fire({
+                  icon: 'error',
+                  title: 'Bukti pembayaran gagal dimuat'
+                })
+              "
             />
-
-            <!-- EMPTY -->
-            <div
-              v-if="!selected.cloudinary_proof_url"
-              class="text-muted text-sm"
-            >
-              Bukti pembayaran belum tersedia
-            </div>
 
             <!-- ERROR -->
             <div
@@ -202,9 +201,6 @@
             </div>
 
           </div>
-
-
-
 
 
 
@@ -288,25 +284,6 @@ const Toast = Swal.mixin({
   }
 })
 
-$('#verifyModal').on('hidden.bs.modal', () => {
-  selected.value = null
-  notes.value = ''
-  selectedTemplate.value = ''
-  proofLoading.value = true
-  proofError.value = false
-})
-
-const handleProofError = () => {
-  proofLoading.value = false
-  proofError.value = true
-
-  Toast.fire({
-    icon: 'error',
-    title: 'Bukti pembayaran gagal dimuat'
-  })
-}
-
-
 const noteTemplates = [
   {
     value: '',
@@ -358,16 +335,14 @@ const proofLoading = ref(true)
 const proofError   = ref(false)
 
 const openModal = (item) => {
-  selected.value = null   // force re-render dulu
+  selected.value = item
+  notes.value = ''
+
   proofLoading.value = true
-  proofError.value = false
+  proofError.value   = false
 
-  setTimeout(() => {
-    selected.value = item
-    $('#verifyModal').modal('show')
-  }, 0)
+  $('#verifyModal').modal('show')
 }
-
 
 const fetchData = async (page = 1) => {
   isLoading.value = true
@@ -427,13 +402,6 @@ const submit = async (action) => {
     })
 
     Swal.close() // ✅ TUTUP LOADING DULU
-
-    // ✅ RESET STATE
-    notes.value = ''
-    selectedTemplate.value = ''
-    proofLoading.value = true
-    proofError.value = false
-    selected.value = null
 
     $('#verifyModal').modal('hide')
     fetchData(meta.value.current_page)
