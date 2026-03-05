@@ -8,9 +8,16 @@
             Manajemen data pengguna sistem.
           </p>
         </div>
-        <button class="btn btn-primary btn-sm" @click="openCreateModal">
-          + Tambah User
-        </button>
+
+        <div>
+          <button class="btn btn-success btn-sm mr-2" @click="exportExcel">
+            <i class="fas fa-file-excel mr-1"></i> Export Excel
+          </button>
+
+          <button class="btn btn-primary btn-sm" @click="openCreateModal">
+            + Tambah User
+          </button>
+        </div>
       </div>
     </div>
   </section>
@@ -51,6 +58,7 @@
                 <th>Nama</th>
                 <th>Email</th>
                 <th>Username</th>
+                <th>NIK</th>
                 <th style="width:120px">Role</th>
                 <th style="width:90px" class="text-center">Multi Role</th>
                 <th style="width:110px" class="text-center">Aksi</th>
@@ -70,6 +78,7 @@
                 <td><strong>{{ item.name }}</strong></td>
                 <td>{{ item.email }}</td>
                 <td>{{ item.username ?? '-' }}</td>
+                <td>{{ item.nik ?? '-' }}</td>
                 <td>{{ item.role?.name }}</td>
                 <td class="text-center">
                   <span
@@ -148,6 +157,10 @@
                     <label>Username</label>
                     <input v-model="form.username" class="form-control form-control-sm" />
                   </div>
+                  <div class="form-group">
+                    <label>NIK</label>
+                    <input v-model="form.nik" class="form-control form-control-sm" />
+                  </div>
                 </div>
 
                 <div class="col-md-6">
@@ -212,6 +225,15 @@ const Toast = Swal.mixin({
   timerProgressBar: true,
 })
 
+const exportExcel = () => {
+
+  const params = new URLSearchParams({
+    search: search.value || ''
+  })
+
+  window.open(`/api/v1/users/export?${params.toString()}`, '_blank')
+
+}
 
 const items = ref([])
 const roles = ref([])
@@ -227,6 +249,7 @@ const form = ref({
   name: '',
   email: '',
   username: '',
+  nik: '',
   password: '',
   role_id: '',
   can_multiple_role: false,
@@ -265,6 +288,7 @@ const openCreateModal = () => {
     name: '',
     email: '',
     username: '',
+    nik: '',
     password: '',
     role_id: '',
     can_multiple_role: false,

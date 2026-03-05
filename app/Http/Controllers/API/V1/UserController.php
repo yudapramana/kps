@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Exports\UsersExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -40,6 +42,7 @@ class UserController extends Controller
             'name'              => ['required', 'string'],
             'email'             => ['required', 'email', 'unique:users,email'],
             'username'          => ['nullable', 'string'],
+            'nik'               => ['nullable', 'string'],
             'password'          => ['required', 'string', 'min:6'],
             'role_id'           => ['required', 'exists:roles,id'],
             'can_multiple_role' => ['boolean'],
@@ -62,6 +65,7 @@ class UserController extends Controller
             'name'              => ['required', 'string'],
             'email'             => ['required', 'email', 'unique:users,email,' . $user->id],
             'username'          => ['nullable', 'string'],
+            'nik'               => ['nullable', 'string'],
             'password'          => ['nullable', 'string', 'min:6'],
             'role_id'           => ['required', 'exists:roles,id'],
             'can_multiple_role' => ['boolean'],
@@ -88,5 +92,15 @@ class UserController extends Controller
         return response()->json([
             'message' => 'User berhasil dihapus.',
         ]);
+    }
+
+    
+
+    public function export(Request $request)
+    {
+        return Excel::download(
+            new UsersExport($request),
+            'users_' . now()->format('Ymd_His') . '.xlsx'
+        );
     }
 }

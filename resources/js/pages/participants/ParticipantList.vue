@@ -9,6 +9,14 @@
             Daftar peserta yang terdaftar pada sistem.
           </p>
         </div>
+
+        <button
+          class="btn btn-success btn-sm"
+          @click="exportExcel"
+        >
+          <i class="fas fa-file-excel mr-1"></i>
+          Export Excel
+        </button>
       </div>
     </div>
   </section>
@@ -39,7 +47,7 @@
               </div>
 
               <!-- CATEGORY -->
-              <div>
+              <div class="mr-2">
                 <select
                   v-model="selectedCategory"
                   class="form-control form-control-sm"
@@ -52,6 +60,18 @@
                   >
                     {{ c.name }}
                   </option>
+                </select>
+              </div>
+
+              <!-- PAYMENT STATUS -->
+              <div>
+                <select
+                  v-model="selectedPaid"
+                  class="form-control form-control-sm"
+                >
+                  <option value="">-- Payment Status --</option>
+                  <option value="1">Paid</option>
+                  <option value="0">Unpaid</option>
                 </select>
               </div>
             </div>
@@ -73,21 +93,23 @@
             <thead class="thead-light">
               <tr>
                 <th style="width:40px">#</th>
-                <th>Peserta</th>
+                <th>Nama</th>
+                <th>NIK</th>
                 <th>Kontak</th>
                 <th>Instansi</th>
                 <th style="width:160px">Kategori</th>
                 <th style="width:120px">Registrasi</th>
+                <th style="width:120px">Payment</th>
               </tr>
             </thead>
 
             <tbody>
               <tr v-if="isLoading">
-                <td colspan="6" class="text-center">Memuat data...</td>
+                <td colspan="8" class="text-center">Memuat data...</td>
               </tr>
 
               <tr v-else-if="items.length === 0">
-                <td colspan="6" class="text-center text-muted">
+                <td colspan="8" class="text-center text-muted">
                   Belum ada peserta.
                 </td>
               </tr>
@@ -99,7 +121,10 @@
 
                 <td>
                   <strong>{{ item.full_name }}</strong><br>
-                  <small class="text-muted">NIK: {{ item.nik || '-' }}</small>
+                </td>
+
+                <td>
+                  <strong>{{ item.nik }}</strong><br>
                 </td>
 
                 <td>
@@ -125,6 +150,15 @@
                       : 'badge-secondary'"
                   >
                     {{ item.registration_type }}
+                  </span>
+                </td>
+
+                <td>
+                  <span
+                    class="badge"
+                    :class="item.is_paid ? 'badge-success' : 'badge-warning'"
+                  >
+                    {{ item.is_paid ? 'Paid' : 'Unpaid' }}
                   </span>
                 </td>
               </tr>
@@ -168,6 +202,17 @@ import { ref, watch, onMounted } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import axios from 'axios'
 
+const exportExcel = () => {
+
+  const params = new URLSearchParams({
+    search: search.value || '',
+    participant_category_id: selectedCategory.value || '',
+    is_paid: selectedPaid.value || ''
+  })
+
+  window.open(`/api/v1/participants/export?${params.toString()}`, '_blank')
+}
+
 const items = ref([])
 const categories = ref([])
 
@@ -176,6 +221,7 @@ const search = ref('')
 const perPage = ref(10)
 const selectedCategory = ref('')
 const isLoading = ref(false)
+const selectedPaid = ref('')
 
 const fetchData = async (page = 1) => {
   isLoading.value = true
@@ -186,6 +232,7 @@ const fetchData = async (page = 1) => {
       per_page: perPage.value,
       search: search.value,
       participant_category_id: selectedCategory.value || null,
+      is_paid: selectedPaid.value || null,
     },
   })
 
@@ -197,6 +244,7 @@ const fetchData = async (page = 1) => {
 
 const changePage = (page) => fetchData(page)
 
+watch(selectedPaid, () => fetchData(1))
 watch(search, useDebounceFn(() => fetchData(1), 400))
 watch(perPage, () => fetchData(1))
 watch(selectedCategory, () => fetchData(1))

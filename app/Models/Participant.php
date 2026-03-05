@@ -20,6 +20,10 @@ class Participant extends Model
         'registration_type',
     ];
 
+    protected $appends = [
+        'is_paid',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -35,8 +39,28 @@ class Participant extends Model
         return $this->hasMany(Registration::class);
     }
 
+    public function registration()
+    {
+        return $this->hasOne(Registration::class);
+    }
+
     public function papers()
     {
         return $this->hasMany(Paper::class);
+    }
+
+    public function getIsPaidAttribute()
+    {
+        // Jika relasi registrations sudah di eager load
+        if ($this->relationLoaded('registration')) {
+            return $this->registration
+                ->where('payment_step', 'paid')
+                ->isNotEmpty();
+        }
+
+        // Jika belum diload
+        return $this->registration()
+            ->where('payment_step', 'paid')
+            ->exists();
     }
 }

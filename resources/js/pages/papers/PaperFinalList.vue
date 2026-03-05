@@ -87,11 +87,11 @@
 
             <tbody>
               <tr v-if="isLoading">
-                <td colspan="5" class="text-center">Memuat data...</td>
+                <td colspan="6" class="text-center">Memuat data...</td>
               </tr>
 
               <tr v-else-if="items.length === 0">
-                <td colspan="5" class="text-center text-muted">
+                <td colspan="6" class="text-center text-muted">
                   Belum ada paper final.
                 </td>
               </tr>

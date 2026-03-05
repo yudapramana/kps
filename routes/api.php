@@ -114,6 +114,8 @@ Route::middleware(['auth:sanctum']) // kalau belum pakai sanctum, boleh dihapus 
     ->prefix('v1')
     ->group(function () {
 
+        Route::get('/users/export', [UserController::class, 'export']);
+        Route::get('/participants/export', [ParticipantController::class, 'export']);
         Route::apiResource('paper-types', PaperTypeController::class)->except(['show']);
         Route::get('papers/final', [PaperFinalController::class, 'index']);
         Route::put('papers/{paper}/final', [PaperFinalController::class, 'update']);
