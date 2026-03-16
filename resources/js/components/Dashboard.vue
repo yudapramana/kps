@@ -306,6 +306,76 @@ onMounted(() => {
           </div>
         </div>
 
+        <!-- REGISTRATION SUMMARY -->
+        <div class="col-lg-6 col-md-12" v-if="statistics">
+
+          <div class="card dashboard-card">
+
+            <div class="card-header">
+              <h6 class="mb-0">Registration Summary</h6>
+            </div>
+
+            <div class="card-body">
+
+              <div v-if="loading" class="chart-loading">
+                <div class="spinner"></div>
+              </div>
+
+              <div class="row">
+
+                <!-- CHART -->
+                <div class="col-5 chart-box">
+                  <Doughnut
+                    v-if="registrationChartData"
+                    :data="registrationChartData"
+                    :options="chartOptions"
+                  />
+                </div>
+
+                <!-- TABLE -->
+                <div class="col-7">
+
+                  <div class="table-title">
+                    Registration Details
+                  </div>
+
+                  <table class="summary-table">
+                    <tbody>
+
+                      <tr>
+                        <td>Already Registration</td>
+                        <td class="value success">
+                          {{ statistics.already_registered }}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td>Not Yet Registration</td>
+                        <td class="value warning">
+                          {{ statistics.not_yet_registered }}
+                        </td>
+                      </tr>
+
+                      <tr class="total-row">
+                        <td>Total Registration</td>
+                        <td class="value">
+                          {{ statistics.total_registrations }}
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
         <!-- PARTICIPANT SUMMARY -->
         <div class="col-lg-6 col-md-12" v-if="statistics">
 
@@ -378,75 +448,7 @@ onMounted(() => {
         
 
 
-        <!-- REGISTRATION SUMMARY -->
-        <div class="col-lg-6 col-md-12" v-if="statistics">
-
-          <div class="card dashboard-card">
-
-            <div class="card-header">
-              <h6 class="mb-0">Registration Summary</h6>
-            </div>
-
-            <div class="card-body">
-
-              <div v-if="loading" class="chart-loading">
-                <div class="spinner"></div>
-              </div>
-
-              <div class="row">
-
-                <!-- CHART -->
-                <div class="col-5 chart-box">
-                  <Doughnut
-                    v-if="registrationChartData"
-                    :data="registrationChartData"
-                    :options="chartOptions"
-                  />
-                </div>
-
-                <!-- TABLE -->
-                <div class="col-7">
-
-                  <div class="table-title">
-                    Registration Details
-                  </div>
-
-                  <table class="summary-table">
-                    <tbody>
-
-                      <tr>
-                        <td>Already Registration</td>
-                        <td class="value success">
-                          {{ statistics.already_registered }}
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td>Not Yet Registration</td>
-                        <td class="value warning">
-                          {{ statistics.not_yet_registered }}
-                        </td>
-                      </tr>
-
-                      <tr class="total-row">
-                        <td>Total Registration</td>
-                        <td class="value">
-                          {{ statistics.total_registrations }}
-                        </td>
-                      </tr>
-
-                    </tbody>
-                  </table>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
+        
         
 
       </div>

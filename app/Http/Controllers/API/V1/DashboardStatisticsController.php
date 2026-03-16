@@ -51,7 +51,7 @@ class DashboardStatisticsController extends Controller
         | PAYMENT
         |----------------------------------------
         */
-        $paidParticipants = Registration::where('status', 'paid')->count();
+        $paidParticipants = Registration::where('status', 'paid')->whereNotNull('participant_id')->count();
 
         $unpaidParticipants = $totalParticipants - $paidParticipants;
 
