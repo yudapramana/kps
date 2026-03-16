@@ -7,7 +7,6 @@ use App\Models\Event;
 use App\Models\EventStatistic;
 use App\Models\Participant;
 use App\Models\Registration;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DashboardStatisticsController extends Controller
@@ -41,45 +40,57 @@ class DashboardStatisticsController extends Controller
 
         /*
         |----------------------------------------
-        | PARTICIPANT
+        | TOTAL PARTICIPANTS
         |----------------------------------------
         */
         $totalParticipants = Participant::count();
 
         /*
         |----------------------------------------
-        | PAYMENT
+        | REGISTRATION SUMMARY
         |----------------------------------------
         */
-        $paidParticipants = Registration::where('status', 'paid')->whereNotNull('participant_id')->count();
 
-        $unpaidParticipants = $totalParticipants - $paidParticipants;
-
-
-        /*
-        |----------------------------------------
-        | PARTICIPANT REGISTRATION
-        |----------------------------------------
-        */
-        $alreadyRegistered = Registration::distinct('participant_id')
-            ->whereNotNull('participant_id')
+        // participant yang sudah punya registration
+        $alreadyRegistered = Registration::whereNotNull('participant_id')->distinct('participant_id')
             ->count('participant_id');
 
+        // participant yang belum punya registration
         $notYetRegistered = $totalParticipants - $alreadyRegistered;
+
 
         /*
         |----------------------------------------
-        | SAVE
+        | PARTICIPANT SUMMARY
+        |----------------------------------------
+        */
+
+        // paid
+        $paidParticipants = Registration::whereNotNull('participant_id')->where('status', 'paid')
+            ->count();
+
+        // unpaid
+        $unpaidParticipants = Registration::whereNotNull('participant_id')->where('status', '!=', 'paid')
+            ->count();
+
+        // total registrasi
+        $totalRegistrations = Registration::whereNotNull('participant_id')->count();
+
+
+        /*
+        |----------------------------------------
+        | SAVE STATISTICS
         |----------------------------------------
         */
         $stats = EventStatistic::updateOrCreate(
             ['event_id' => $event->id],
             [
                 'total_participants' => $totalParticipants,
+
                 'paid_participants' => $paidParticipants,
                 'unpaid_participants' => $unpaidParticipants,
 
-                'total_registrations' => $paidParticipants,
+                'total_registrations' => $totalRegistrations,
                 'already_registered' => $alreadyRegistered,
                 'not_yet_registered' => $notYetRegistered,
 
