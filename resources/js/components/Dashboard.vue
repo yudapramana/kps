@@ -312,7 +312,7 @@ onMounted(() => {
           <div class="card dashboard-card">
 
             <div class="card-header">
-              <h6 class="mb-0">Registration Summaryya</h6>
+              <h6 class="mb-0">Registration Summary</h6>
             </div>
 
             <div class="card-body">
@@ -357,7 +357,7 @@ onMounted(() => {
                       </tr>
 
                       <tr class="total-row">
-                        <td>Total Registration</td>
+                        <td>Total Participant</td>
                         <td class="value">
                           {{ statistics.total_registrations }}
                         </td>

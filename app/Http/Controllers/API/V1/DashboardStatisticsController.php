@@ -85,12 +85,13 @@ class DashboardStatisticsController extends Controller
         $stats = EventStatistic::updateOrCreate(
             ['event_id' => $event->id],
             [
-                'total_participants' => $totalParticipants,
+                'total_participants' => $paidParticipants + $unpaidParticipants,
 
                 'paid_participants' => $paidParticipants,
                 'unpaid_participants' => $unpaidParticipants,
 
-                'total_registrations' => $totalRegistrations,
+                'total_registrations' => $alreadyRegistered + $notYetRegistered,
+                // 'total_registrations' => $totalRegistrations,
                 'already_registered' => $alreadyRegistered,
                 'not_yet_registered' => $notYetRegistered,
 
