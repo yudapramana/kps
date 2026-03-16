@@ -48,24 +48,25 @@ class DashboardStatisticsController extends Controller
 
         /*
         |----------------------------------------
-        | PAYMENT
+        | REGISTRATION
         |----------------------------------------
         */
         $paidParticipants = Registration::where('status', 'paid')->count();
 
         $unpaidParticipants = $totalParticipants - $paidParticipants;
 
-
         /*
         |----------------------------------------
-        | PARTICIPANT REGISTRATION
+        | ACTIVITY REGISTRATION
         |----------------------------------------
         */
-        $alreadyRegistered = Registration::distinct('participant_id')
-            ->whereNotNull('participant_id')
-            ->count('participant_id');
+        $alreadyRegistered = DB::table('registration_items')
+            ->join('registrations', 'registration_items.registration_id', '=', 'registrations.id')
+            ->where('registrations.status', 'paid')
+            ->distinct('registrations.participant_id')
+            ->count('registrations.participant_id');
 
-        $notYetRegistered = $totalParticipants - $alreadyRegistered;
+        $notYetRegistered = $paidParticipants - $alreadyRegistered;
 
         /*
         |----------------------------------------
