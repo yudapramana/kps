@@ -17,6 +17,7 @@ use App\Http\Controllers\API\V1\ActivityTopicController;
 use App\Http\Controllers\API\V1\BankController;
 use App\Http\Controllers\API\V1\BranchController;
 use App\Http\Controllers\API\V1\CategoryController;
+use App\Http\Controllers\API\V1\DashboardStatisticsController;
 use App\Http\Controllers\API\V1\EventBranchController;
 use App\Http\Controllers\API\V1\EventCategoryController;
 use App\Http\Controllers\API\V1\EventCompetitionController;
@@ -113,6 +114,9 @@ Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
 Route::middleware(['auth:sanctum']) // kalau belum pakai sanctum, boleh dihapus dulu
     ->prefix('v1')
     ->group(function () {
+
+        Route::get('/statistics', [DashboardStatisticsController::class, 'show']);
+        Route::post('/statistics/refresh', [DashboardStatisticsController::class, 'refresh']);
 
         Route::get('/users/export', [UserController::class, 'export']);
         Route::get('/participants/export', [ParticipantController::class, 'export']);
