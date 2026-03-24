@@ -167,13 +167,14 @@
               <div class="form-group">
                 <label>Paket</label>
                 <select
-                  v-model.number="form.workshop_count"
+                  v-model="form.package_type"
                   class="form-control form-control-sm"
                   required
                 >
-                  <option :value="0">Symposium</option>
-                  <option :value="1">Symposium + 1 Workshop</option>
-                  <option :value="2">Symposium + 2 Workshop</option>
+                  <option value="symposium">Symposium</option>
+                  <option value="symposium_ws1">Symposium + 1 Workshop</option>
+                  <option value="symposium_ws2">Symposium + 2 Workshop</option>
+                  <option value="nurse_ws">Workshop for Nurse</option>
                 </select>
               </div>
 
@@ -229,7 +230,7 @@ const form = ref({
   id: null,
   participant_category_id: '',
   bird_type: '',
-  workshop_count: 0,
+  package_type: 'symposium',
   price: 0,
 })
 
@@ -276,7 +277,7 @@ const openCreateModal = () => {
     id: null,
     participant_category_id: '',
     bird_type: '',
-    workshop_count: 0,
+    package_type: 'symposium',
     price: 0,
   }
   $('#pricingModal').modal('show')
@@ -284,26 +285,64 @@ const openCreateModal = () => {
 
 const openEditModal = (item) => {
   isEdit.value = true
+
+  let packageType = 'symposium'
+
+  if (!item.includes_symposium && item.workshop_count === 1) {
+    packageType = 'nurse_ws'
+  } else if (item.workshop_count === 1) {
+    packageType = 'symposium_ws1'
+  } else if (item.workshop_count === 2) {
+    packageType = 'symposium_ws2'
+  }
+
   form.value = {
     id: item.id,
     participant_category_id: item.participant_category_id,
     bird_type: item.bird_type,
-    workshop_count: item.workshop_count,
+    package_type: packageType,
     price: item.price,
   }
+
   $('#pricingModal').modal('show')
 }
 
 const submitForm = async () => {
   try {
+
+    const payload = { ...form.value }
+
+    switch (payload.package_type) {
+
+      case 'symposium':
+        payload.includes_symposium = true
+        payload.workshop_count = 0
+        break
+
+      case 'symposium_ws1':
+        payload.includes_symposium = true
+        payload.workshop_count = 1
+        break
+
+      case 'symposium_ws2':
+        payload.includes_symposium = true
+        payload.workshop_count = 2
+        break
+
+      case 'nurse_ws':
+        payload.includes_symposium = false
+        payload.workshop_count = 1
+        break
+    }
+
     if (isEdit.value) {
-      await axios.put(`/api/v1/pricing-items/${form.value.id}`, form.value)
+      await axios.put(`/api/v1/pricing-items/${form.value.id}`, payload)
       Toast.fire({
         icon: 'success',
         title: 'Pricing berhasil diperbarui',
       })
     } else {
-      await axios.post('/api/v1/pricing-items', form.value)
+      await axios.post('/api/v1/pricing-items', payload)
       Toast.fire({
         icon: 'success',
         title: 'Pricing berhasil ditambahkan',

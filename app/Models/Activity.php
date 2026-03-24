@@ -6,15 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Activity extends Model
 {
-    protected $fillable = [
-        'event_id',
-        'category',
-        'code',
-        'title',
-        'description',
-        'is_paid',
-        'quota',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'is_paid' => 'boolean',
@@ -28,6 +20,21 @@ class Activity extends Model
     public function topics()
     {
         return $this->hasMany(ActivityTopic::class);
+    }
+
+    public function speakers()
+    {
+        return $this->hasMany(ActivitySpeaker::class);
+    }
+
+    public function panelists()
+    {
+        return $this->hasMany(ActivityPanelist::class);
+    }
+
+    public function sponsors()
+    {
+        return $this->hasMany(ActivitySponsor::class);
     }
 
     public function sessions()

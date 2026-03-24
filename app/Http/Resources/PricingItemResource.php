@@ -32,14 +32,19 @@ class PricingItemResource extends JsonResource
 
     protected function packageLabel(): string
     {
-        if (!$this->includes_symposium) {
-            return 'Workshop Only';
+        if (!$this->includes_symposium && $this->workshop_count == 1) {
+            $label = 'Workshop for Nurse';
+        }
+        elseif ($this->workshop_count == 0) {
+            $label = 'Symposium';
+        }
+        elseif ($this->workshop_count == 1) {
+            $label = 'Symposium + 1 Workshop';
+        }
+        elseif ($this->workshop_count == 2) {
+            $label = 'Symposium + 2 Workshop';
         }
 
-        if ($this->workshop_count === 0) {
-            return 'Symposium';
-        }
-
-        return 'Symposium + ' . $this->workshop_count . ' Workshop';
+        return $label;
     }
 }

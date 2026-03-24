@@ -10,7 +10,10 @@ class PricingItem extends Model
         'participant_category_id',
         'package_type',
         'workshop_quota',
+        'workshop_count',
+        'includes_symposium',
         'price',
+        'bird_type'
     ];
 
     protected $casts = [
@@ -25,5 +28,31 @@ class PricingItem extends Model
     public function registrations()
     {
         return $this->hasMany(Registration::class);
+    }
+
+    public function getPackageLabelAttribute()
+    {
+        // PACKAGE 4 (NURSE)
+        if (!$this->includes_symposium && $this->workshop_count === 1) {
+            $label = 'Workshop for Nurse';
+        } else {
+
+            $label = 'Symposium';
+
+            if ($this->workshop_count > 0) {
+                $workshopText = $this->workshop_count == 1
+                    ? '1 Workshop'
+                    : $this->workshop_count . ' Workshops';
+
+                $label .= ' + ' . $workshopText;
+            }
+        }
+
+        // Bird label (optional safety)
+        // if ($this->bird_type) {
+        //     $label .= ' (' . strtoupper($this->bird_type) . ' BIRD)';
+        // }
+
+        return $label;
     }
 }

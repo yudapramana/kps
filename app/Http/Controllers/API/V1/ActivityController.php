@@ -15,8 +15,13 @@ class ActivityController extends Controller
         $category = $request->get('category');
         $perPage  = (int) ($request->get('per_page') ?? 10);
 
-        $query = Activity::with('topics', 'event')
-            ->orderBy('category');
+        $query = Activity::with([
+                    'topics',
+                    'speakers',
+                    'panelists',
+                    'sponsors',
+                    'event'
+                ])->orderBy('category');
 
         if ($eventId) {
             $query->where('event_id', $eventId);
@@ -47,6 +52,12 @@ class ActivityController extends Controller
             'category'    => ['required', 'in:plenary,symposium,workshop,jeopardy,poster'],
             'code'        => ['nullable', 'string', 'max:20'],
             'title'       => ['required', 'string'],
+
+            'moderator'     => ['nullable','string'],
+            'lecture'        => ['nullable','string'],
+            'case_presenter' => ['nullable','string'],
+            'pic'            => ['nullable','string'],
+
             'description' => ['nullable', 'string'],
             'is_paid'     => ['boolean'],
             'quota'       => ['nullable', 'integer', 'min:0'],
@@ -66,6 +77,10 @@ class ActivityController extends Controller
             'category'    => ['required', 'in:plenary,symposium,workshop,jeopardy,poster'],
             'code'        => ['nullable', 'string', 'max:20'],
             'title'       => ['required', 'string'],
+            'moderator'     => ['nullable','string'],
+            'lecture'        => ['nullable','string'],
+            'case_presenter' => ['nullable','string'],
+            'pic'            => ['nullable','string'],
             'description' => ['nullable', 'string'],
             'is_paid'     => ['boolean'],
             'quota'       => ['nullable', 'integer', 'min:0'],

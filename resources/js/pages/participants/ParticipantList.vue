@@ -98,18 +98,19 @@
                 <th>Kontak</th>
                 <th>Instansi</th>
                 <th style="width:160px">Kategori</th>
-                <th style="width:120px">Registrasi</th>
+                <th style="width:160px">Package</th> <!-- ✅ NEW -->
+                <!-- <th style="width:120px">Registrasi</th> -->
                 <th style="width:120px">Payment</th>
               </tr>
             </thead>
 
             <tbody>
               <tr v-if="isLoading">
-                <td colspan="8" class="text-center">Memuat data...</td>
+                <td colspan="9" class="text-center">Memuat data...</td>
               </tr>
 
               <tr v-else-if="items.length === 0">
-                <td colspan="8" class="text-center text-muted">
+                <td colspan="9" class="text-center text-muted">
                   Belum ada peserta.
                 </td>
               </tr>
@@ -120,11 +121,11 @@
                 </td>
 
                 <td>
-                  <strong>{{ item.full_name }}</strong><br>
+                  <strong>{{ item.full_name }}</strong>
                 </td>
 
                 <td>
-                  <strong>{{ item.nik }}</strong><br>
+                  <strong>{{ item.nik }}</strong>
                 </td>
 
                 <td>
@@ -137,22 +138,34 @@
                 </td>
 
                 <td>
-                  <span class="badge badge-info">
-                    {{ item.participant_category?.name }}
+                  <span
+                    class="badge"
+                    :class="getCategoryBadge(item.participant_category?.name)"
+                  >
+                    {{ item.participant_category?.name || '-' }}
                   </span>
                 </td>
 
+                <!-- ✅ PACKAGE -->
                 <td>
+                  <span class="badge badge-primary">
+                    {{ item.package_label || 'No Package Selected' }}
+                  </span>
+                </td>
+
+                <!-- ✅ REGISTRATION TYPE (ambil dari relation) -->
+                <!-- <td>
                   <span
                     class="badge"
-                    :class="item.registration_type === 'sponsored'
+                    :class="item.registration?.registration_type === 'sponsored'
                       ? 'badge-success'
                       : 'badge-secondary'"
                   >
-                    {{ item.registration_type }}
+                    {{ item.registration?.registration_type || '-' }}
                   </span>
-                </td>
+                </td> -->
 
+                <!-- ✅ PAYMENT (dari backend) -->
                 <td>
                   <span
                     class="badge"
@@ -202,6 +215,32 @@ import { ref, watch, onMounted } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import axios from 'axios'
 
+
+const getCategoryBadge = (name) => {
+  if (!name) return 'badge-secondary'
+
+  name = name.toLowerCase()
+
+  if (name.includes('general practitioner') || name.includes('internship')) {
+    return 'badge-primary'
+  }
+
+  if (name.includes('speaker') || name.includes('faculty') || name.includes('sponsor')) {
+    return 'badge-dark'
+  }
+
+  if (name.includes('specialist')) {
+    return 'badge-danger'
+  }
+
+  if (name.includes('student') || name.includes('nurse')) {
+    return 'badge-success'
+  }
+
+  return 'badge-secondary'
+}
+
+
 const exportExcel = () => {
 
   const params = new URLSearchParams({
@@ -226,20 +265,26 @@ const selectedPaid = ref('')
 const fetchData = async (page = 1) => {
   isLoading.value = true
 
-  const res = await axios.get('/api/v1/participants', {
-    params: {
-      page,
-      per_page: perPage.value,
-      search: search.value,
-      participant_category_id: selectedCategory.value || null,
-      is_paid: selectedPaid.value || null,
-    },
-  })
+  try {
+    const res = await axios.get('/api/v1/participants', {
+      params: {
+        page,
+        per_page: perPage.value,
+        search: search.value,
+        participant_category_id: selectedCategory.value || null,
+        is_paid: selectedPaid.value || null,
+      },
+    })
 
-  items.value = res.data.data.data
-  meta.value = res.data.data
-  categories.value = res.data.categories
-  isLoading.value = false
+    items.value = res.data.data.data
+    meta.value = res.data.data
+    categories.value = res.data.categories
+
+  } catch (err) {
+    console.error(err)
+  } finally {
+    isLoading.value = false
+  }
 }
 
 const changePage = (page) => fetchData(page)

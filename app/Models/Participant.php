@@ -51,14 +51,10 @@ class Participant extends Model
 
     public function getIsPaidAttribute()
     {
-        // Jika relasi registrations sudah di eager load
         if ($this->relationLoaded('registration')) {
-            return $this->registration
-                ->where('payment_step', 'paid')
-                ->isNotEmpty();
+            return optional($this->registration)->payment_step === 'paid';
         }
 
-        // Jika belum diload
         return $this->registration()
             ->where('payment_step', 'paid')
             ->exists();

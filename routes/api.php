@@ -13,6 +13,9 @@ use App\Http\Controllers\API\SimplePermissionController;
 use App\Http\Controllers\API\LocationController;
 use App\Http\Controllers\API\PublicEventController;
 use App\Http\Controllers\API\V1\ActivityController;
+use App\Http\Controllers\API\V1\ActivityPanelistController;
+use App\Http\Controllers\API\V1\ActivitySpeakerController;
+use App\Http\Controllers\API\V1\ActivitySponsorController;
 use App\Http\Controllers\API\V1\ActivityTopicController;
 use App\Http\Controllers\API\V1\BankController;
 use App\Http\Controllers\API\V1\BranchController;
@@ -67,6 +70,7 @@ use App\Http\Controllers\API\V1\StageController;
 use App\Http\Controllers\API\V1\UserController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\Auth\PasswordResetWhatsappController;
+use App\Models\ActivitySponsor;
 
 /*
 |--------------------------------------------------------------------------
@@ -142,6 +146,12 @@ Route::middleware(['auth:sanctum']) // kalau belum pakai sanctum, boleh dihapus 
         Route::apiResource('rooms',                     RoomController::class);
         Route::apiResource('activities',                ActivityController::class);
         Route::apiResource('activity-topics',           ActivityTopicController::class)->only(['store', 'update', 'destroy']);
+        Route::apiResource('activity-speakers', ActivitySpeakerController::class)
+            ->only(['store','update','destroy']);
+        Route::apiResource('activity-panelists', ActivityPanelistController::class)
+            ->only(['store','update','destroy']);
+        Route::apiResource('activity-sponsors', ActivitySponsorController::class)
+            ->only(['store','update','destroy']);
         Route::apiResource('sessions',                  SessionController::class)->except(['show']);
         Route::apiResource('participant-categories',    ParticipantCategoryController::class);
         Route::get('participants',                     [ParticipantController::class, 'index']);

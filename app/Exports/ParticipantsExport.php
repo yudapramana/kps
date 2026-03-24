@@ -31,12 +31,20 @@ class ParticipantsExport extends StringValueBinder implements
 
     public function collection()
     {
-        $search = $this->request->get('search');
+        $search     = $this->request->get('search');
         $categoryId = $this->request->get('participant_category_id');
-        $isPaid = $this->request->get('is_paid');
+        $isPaid     = $this->request->get('is_paid');
 
-        $query = Participant::with('participantCategory');
+        $query = Participant::with([
+            'participantCategory',
+            'registration.pricingItem' // ✅ penting
+        ]);
 
+        /*
+        |--------------------------------------------------
+        | SEARCH
+        |--------------------------------------------------
+        */
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'like', "%{$search}%")
@@ -46,22 +54,34 @@ class ParticipantsExport extends StringValueBinder implements
             });
         }
 
+        /*
+        |--------------------------------------------------
+        | FILTER CATEGORY
+        |--------------------------------------------------
+        */
         if ($categoryId) {
             $query->where('participant_category_id', $categoryId);
         }
 
+        /*
+        |--------------------------------------------------
+        | FILTER PAYMENT (FIX HASONE)
+        |--------------------------------------------------
+        */
         if ($isPaid !== null && $isPaid !== '') {
 
+            // SUDAH BAYAR
             if ($isPaid == 1) {
-                $query->whereHas('registrations', function ($q) {
+                $query->whereHas('registration', function ($q) {
                     $q->where('payment_step', 'paid');
                 });
             }
 
+            // BELUM BAYAR
             if ($isPaid == 0) {
                 $query->where(function ($q) {
-                    $q->whereDoesntHave('registrations')
-                      ->orWhereHas('registrations', function ($q2) {
+                    $q->whereDoesntHave('registration')
+                      ->orWhereHas('registration', function ($q2) {
                           $q2->where('payment_step', '!=', 'paid');
                       });
                 });
@@ -75,6 +95,16 @@ class ParticipantsExport extends StringValueBinder implements
 
         foreach ($participants as $p) {
 
+            // ✅ PACKAGE LABEL (SAFE)
+            $packageLabel = optional(
+                $p->registration?->pricingItem
+            )->package_label ?? 'No Package Selected';
+
+            // ✅ PAYMENT STATUS (SAFE)
+            $isPaidStatus = ($p->registration && $p->registration->payment_step === 'paid')
+                ? 'Paid'
+                : 'Unpaid';
+
             $rows[] = [
                 $no++,
                 $p->full_name,
@@ -83,8 +113,8 @@ class ParticipantsExport extends StringValueBinder implements
                 (string) $p->mobile_phone,
                 $p->institution,
                 $p->participantCategory?->name,
-                $p->registration_type,
-                $p->is_paid ? 'Paid' : 'Unpaid',
+                $packageLabel, // ✅ NEW COLUMN
+                $isPaidStatus,
             ];
         }
 
@@ -101,7 +131,7 @@ class ParticipantsExport extends StringValueBinder implements
             'Phone',
             'Institution',
             'Category',
-            'Registration Type',
+            'Package', // ✅ NEW
             'Payment Status',
         ];
     }
@@ -127,7 +157,7 @@ class ParticipantsExport extends StringValueBinder implements
                 // Freeze Header
                 $sheet->freezePane('A2');
 
-                // Auto Filter
+                // Auto Filter (UPDATE COLUMN RANGE)
                 $sheet->setAutoFilter('A1:I1');
 
                 // Highlight Paid / Unpaid

@@ -36,18 +36,20 @@ class PricingItemController extends Controller
         $data = $request->validate([
             'participant_category_id' => ['required', 'exists:participant_categories,id'],
             'bird_type' => ['required', 'in:early,late'],
+            'includes_symposium' => ['required',' boolean'],
             'workshop_count' => ['required', 'integer', 'min:0', 'max:2'],
             'price' => ['required', 'numeric', 'min:0'],
         ]);
-
-        $data['includes_symposium'] = true;
 
         try {
             PricingItem::create($data);
         } catch (QueryException $e) {
             return response()->json([
-                'message' => 'Pricing untuk kombinasi ini sudah ada.',
+                'message' => $e->getMessage(),
             ], 422);
+            // return response()->json([
+            //     'message' => 'Pricing untuk kombinasi ini sudah ada.',
+            // ], 422);
         }
 
         return response()->json(['message' => 'Pricing berhasil ditambahkan'], 201);
@@ -58,11 +60,10 @@ class PricingItemController extends Controller
         $data = $request->validate([
             'participant_category_id' => ['required', 'exists:participant_categories,id'],
             'bird_type' => ['required', 'in:early,late'],
+            'includes_symposium' => ['required','boolean'],
             'workshop_count' => ['required', 'integer', 'min:0', 'max:2'],
             'price' => ['required', 'numeric', 'min:0'],
         ]);
-
-        $data['includes_symposium'] = true;
 
         $pricingItem->update($data);
 
