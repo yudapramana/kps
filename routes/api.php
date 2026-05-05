@@ -14,6 +14,7 @@ use App\Http\Controllers\API\LocationController;
 use App\Http\Controllers\API\PublicEventController;
 use App\Http\Controllers\API\V1\ActivityController;
 use App\Http\Controllers\API\V1\ActivityPanelistController;
+use App\Http\Controllers\API\V1\ActivityParticipantController;
 use App\Http\Controllers\API\V1\ActivitySpeakerController;
 use App\Http\Controllers\API\V1\ActivitySponsorController;
 use App\Http\Controllers\API\V1\ActivityTopicController;
@@ -119,6 +120,10 @@ Route::middleware(['auth:sanctum']) // kalau belum pakai sanctum, boleh dihapus 
     ->prefix('v1')
     ->group(function () {
 
+        Route::get('/activity-participants/export', [ActivityParticipantController::class, 'export']);
+        Route::get('/activity-participants', [ActivityParticipantController::class, 'index']);
+
+        Route::get('/pricing-items/summary', [PricingItemController::class, 'summary']);
         Route::get('/statistics', [DashboardStatisticsController::class, 'show']);
         Route::post('/statistics/refresh', [DashboardStatisticsController::class, 'refresh']);
 

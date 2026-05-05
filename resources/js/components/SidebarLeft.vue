@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthUserStore } from '../stores/AuthUserStore'
 import { useSettingStore } from '../stores/SettingStore'
@@ -20,7 +20,7 @@ const isPriceMenuOpen = ref(false)
 const isPaymentVerificationMenuOpen = ref(false)
 
 /* ===============================
- * ACTIVE HELPERS (DITAMBAHKAN)
+ * ACTIVE HELPERS
  * =============================== */
 const isNameActive = (name) => route.name === name
 
@@ -36,6 +36,7 @@ const userRoutes = [
   'admin.users',
   'admin.participant-categories',
   'admin.participants',
+  'admin.permissions',
 ]
 
 const eventRoutes = [
@@ -47,6 +48,7 @@ const eventRoutes = [
 
 const priceRoutes = [
   'admin.pricing',
+  'admin.pricing.summary',
   'admin.banks',
 ]
 
@@ -105,12 +107,15 @@ watch(
           </li>
 
           <!-- ================= MASTER DATA ================= -->
-          <li class="nav-header" v-if="canAny([
-            'manage.master.permissions',
-            'manage.master.users',
-            'manage.master.participant-categories',
-            'manage.master.participants'
-          ])">
+          <li
+            class="nav-header"
+            v-if="canAny([
+              'manage.master.permissions',
+              'manage.master.users',
+              'manage.master.participant-categories',
+              'manage.master.participants'
+            ])"
+          >
             MASTER DATA
           </li>
 
@@ -140,8 +145,6 @@ watch(
                   <p>Permissions & Roles</p>
                 </router-link>
               </li>
-
-
 
               <li class="nav-item" v-if="can('manage.master.users')">
                 <router-link
@@ -261,6 +264,16 @@ watch(
                 </router-link>
               </li>
 
+              <li class="nav-item">
+                <router-link
+                  :to="{ name: 'admin.pricing.summary' }"
+                  class="nav-link"
+                  :class="{ active: isNameActive('admin.pricing.summary') }"
+                >
+                  <i class="far fa-circle nav-icon"></i><p>Pricing Summary</p>
+                </router-link>
+              </li>
+
               <li class="nav-item" v-if="can('manage.pricing.banks')">
                 <router-link
                   :to="{ name: 'admin.banks' }"
@@ -307,6 +320,16 @@ watch(
               :class="{ active: isNameActive('admin.payments') }"
             >
               <i class="nav-icon fas fa-money-bill-wave"></i><p>Payments</p>
+            </router-link>
+          </li>
+
+          <li class="nav-item">
+            <router-link
+              :to="{ name: 'admin.activity-participants' }"
+              class="nav-link"
+              :class="{ active: isNameActive('admin.activity-participants') }"
+            >
+              <i class="nav-icon fas fa-user-check"></i><p>Activity Participants</p>
             </router-link>
           </li>
 
@@ -360,7 +383,6 @@ watch(
             </router-link>
           </li>
 
-          
           <li
             class="nav-header"
             v-if="canAny([
@@ -371,7 +393,6 @@ watch(
           >
             SCIENTIFIC
           </li>
-
 
           <li class="nav-item" v-if="can('manage.paper-types')">
             <router-link
@@ -405,7 +426,6 @@ watch(
               <p>Paper Final</p>
             </router-link>
           </li>
-
 
           <!-- SETTINGS -->
           <li class="nav-header" v-if="can('manage.settings')">KELOLA</li>

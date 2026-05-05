@@ -1,9 +1,8 @@
 <script setup>
-import { computed, onMounted } from "vue"
+import { computed, onMounted, ref } from "vue"
 import { useAuthUserStore } from "../stores/AuthUserStore.js"
 import { useScreenDisplayStore } from "../stores/ScreenDisplayStore.js"
 import { useMasterDataStore } from "../stores/MasterDataStore.js"
-import { ref } from "vue"
 import axios from "axios"
 import { Doughnut } from "vue-chartjs"
 import {
@@ -13,11 +12,9 @@ import {
   Legend
 } from "chart.js"
 
-
 const centerTextPlugin = {
   id: "centerText",
   afterDraw(chart) {
-
     const { ctx, chartArea } = chart
 
     if (!chartArea) return
@@ -30,60 +27,50 @@ const centerTextPlugin = {
 
     ctx.save()
 
-    /* TOTAL NUMBER */
-
     ctx.font = "bold 22px sans-serif"
     ctx.fillStyle = "#111827"
     ctx.textAlign = "center"
     ctx.textBaseline = "middle"
-
     ctx.fillText(total, centerX, centerY - 6)
-
-    /* LABEL */
 
     ctx.font = "12px sans-serif"
     ctx.fillStyle = "#6b7280"
-
     ctx.fillText("Total", centerX, centerY + 12)
 
     ctx.restore()
-
   }
 }
 
 ChartJS.register(ArcElement, Tooltip, Legend, centerTextPlugin)
 
-
-
 const refreshCooldown = ref(0)
 let cooldownTimer = null
 
 const startCooldown = () => {
-
   refreshCooldown.value = 60
 
   cooldownTimer = setInterval(() => {
-
     refreshCooldown.value--
 
     if (refreshCooldown.value <= 0) {
       clearInterval(cooldownTimer)
     }
-
   }, 1000)
-
 }
 
+const statistics = ref(null)
+const loading = ref(false)
+
 const participantChartData = computed(() => {
-  if (!statistics.value) return null
+  if (!statistics.value?.event_statistics) return null
 
   return {
     labels: ["Paid Package", "Not Purchased Yet"],
     datasets: [
       {
         data: [
-          statistics.value.paid_participants,
-          statistics.value.unpaid_participants
+          statistics.value.event_statistics.paid_participants,
+          statistics.value.event_statistics.unpaid_participants
         ],
         backgroundColor: ["#1fb6cf", "#f5a26f"],
         borderWidth: 0
@@ -93,15 +80,15 @@ const participantChartData = computed(() => {
 })
 
 const registrationChartData = computed(() => {
-  if (!statistics.value) return null
+  if (!statistics.value?.event_statistics) return null
 
   return {
     labels: ["Already Registration", "Not Yet Registration"],
     datasets: [
       {
         data: [
-          statistics.value.already_registered,
-          statistics.value.not_yet_registered
+          statistics.value.event_statistics.already_registered,
+          statistics.value.event_statistics.not_yet_registered
         ],
         backgroundColor: ["#1fb6cf", "#f5a26f"],
         borderWidth: 0
@@ -125,11 +112,15 @@ const chartOptions = {
   }
 }
 
-const statistics = ref(null)
-const loading = ref(false)
+const activityStatistics = computed(() => {
+  return statistics.value?.activity_statistics || []
+})
+
+const packageStatistics = computed(() => {
+  return statistics.value?.package_statistics || []
+})
 
 const loadStatistics = async () => {
-
   loading.value = true
 
   try {
@@ -138,44 +129,29 @@ const loadStatistics = async () => {
   } finally {
     loading.value = false
   }
-
 }
 
 const refreshStatistics = async () => {
-
   if (refreshCooldown.value > 0) return
 
   loading.value = true
 
   try {
-
     await axios.post("/api/v1/statistics/refresh")
-
     await loadStatistics()
-
     startCooldown()
-
   } finally {
-
     loading.value = false
-
   }
-
 }
 
 const authUserStore = useAuthUserStore()
 const screenDisplayStore = useScreenDisplayStore()
 const masterDataStore = useMasterDataStore()
 
-
-
-/* ================= EVENT ACTIVE ================= */
 const activeEvent = computed(() => authUserStore.eventData || {})
-
-/* ================= AGENDA ================= */
 const today = new Date().toISOString().slice(0, 10)
 
-/* ================= HELPERS ================= */
 const formatDate = (date) => {
   if (!date) return "-"
   return new Date(date).toLocaleDateString("id-ID", {
@@ -226,7 +202,6 @@ onMounted(() => {
 
       <!-- HEADER SUMMARY -->
       <div class="dashboard-summary-header" v-if="statistics">
-
         <h5 class="summary-title">
           Dashboard Summary
         </h5>
@@ -236,7 +211,6 @@ onMounted(() => {
           @click="refreshStatistics"
           :disabled="loading || refreshCooldown > 0"
         >
-
           <i
             class="fas"
             :class="loading ? 'fa-spinner fa-spin' : 'fa-sync'"
@@ -253,9 +227,7 @@ onMounted(() => {
           <span v-else>
             Refresh
           </span>
-
         </button>
-
       </div>
 
       <div class="row">
@@ -307,23 +279,18 @@ onMounted(() => {
         </div>
 
         <!-- REGISTRATION SUMMARY -->
-        <div class="col-lg-6 col-md-12" v-if="statistics">
-
+        <div class="col-lg-6 col-md-12" v-if="statistics?.event_statistics">
           <div class="card dashboard-card">
-
             <div class="card-header">
               <h6 class="mb-0">Registration Summary</h6>
             </div>
 
-            <div class="card-body">
-
+            <div class="card-body position-relative">
               <div v-if="loading" class="chart-loading">
                 <div class="spinner"></div>
               </div>
 
               <div class="row">
-
-                <!-- CHART -->
                 <div class="col-5 chart-box">
                   <Doughnut
                     v-if="registrationChartData"
@@ -332,68 +299,54 @@ onMounted(() => {
                   />
                 </div>
 
-                <!-- TABLE -->
                 <div class="col-7">
-
                   <div class="table-title">
                     Registration Details
                   </div>
 
                   <table class="summary-table">
                     <tbody>
-
                       <tr>
                         <td>Already Registration</td>
                         <td class="value success">
-                          {{ statistics.already_registered }}
+                          {{ statistics.event_statistics.already_registered }}
                         </td>
                       </tr>
 
                       <tr>
                         <td>Not Yet Registration</td>
                         <td class="value warning">
-                          {{ statistics.not_yet_registered }}
+                          {{ statistics.event_statistics.not_yet_registered }}
                         </td>
                       </tr>
 
                       <tr class="total-row">
                         <td>Total Participant</td>
                         <td class="value">
-                          {{ statistics.total_registrations }}
+                          {{ statistics.event_statistics.total_registrations }}
                         </td>
                       </tr>
-
                     </tbody>
                   </table>
-
                 </div>
-
               </div>
-
             </div>
-
           </div>
-
         </div>
 
         <!-- PARTICIPANT SUMMARY -->
-        <div class="col-lg-6 col-md-12" v-if="statistics">
-
+        <div class="col-lg-6 col-md-12" v-if="statistics?.event_statistics">
           <div class="card dashboard-card">
-
             <div class="card-header">
               <h6 class="mb-0">Participant Summary</h6>
             </div>
 
-            <div class="card-body">
-
+            <div class="card-body position-relative">
               <div v-if="loading" class="chart-loading">
                 <div class="spinner"></div>
               </div>
 
               <div class="row">
-
-                <!-- CHART -->
                 <div class="col-5 chart-box">
                   <Doughnut
                     v-if="participantChartData"
@@ -402,54 +355,122 @@ onMounted(() => {
                   />
                 </div>
 
-                <!-- TABLE -->
                 <div class="col-7">
-
                   <div class="table-title">
                     Participant Details
                   </div>
 
                   <table class="summary-table">
                     <tbody>
-
                       <tr>
                         <td>Paid Participant</td>
                         <td class="value success">
-                          {{ statistics.paid_participants }}
+                          {{ statistics.event_statistics.paid_participants }}
                         </td>
                       </tr>
 
                       <tr>
                         <td>Unpaid Participant</td>
                         <td class="value danger">
-                          {{ statistics.unpaid_participants }}
+                          {{ statistics.event_statistics.unpaid_participants }}
                         </td>
                       </tr>
 
                       <tr class="total-row">
                         <td>Total Participant</td>
                         <td class="value">
-                          {{ statistics.total_participants }}
+                          {{ statistics.event_statistics.total_participants }}
                         </td>
                       </tr>
-
                     </tbody>
                   </table>
-
                 </div>
-
               </div>
+            </div>
+          </div>
+        </div>
 
+        <!-- ACTIVITY SUMMARY -->
+        <div class="col-lg-6 col-md-12" v-if="statistics">
+          <div class="card dashboard-card">
+            <div class="card-header">
+              <h6 class="mb-0">Activity Summary (Paid)</h6>
             </div>
 
+            <div class="card-body">
+              <div class="table-title">
+                Activity Details
+              </div>
+
+              <table class="summary-table">
+                <thead>
+                  <tr>
+                    <td><strong>Activity</strong></td>
+                    <td class="value"><strong>Total</strong></td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="row in activityStatistics" :key="row.id">
+                    <td>
+                      {{
+                        row.activity_type === 'symposium'
+                          ? 'General Symposium'
+                          : (row.activity_title || '-')
+                      }}
+                    </td>
+                    <td class="value success">
+                      {{ row.paid_participants }}
+                    </td>
+                  </tr>
+
+                  <tr v-if="activityStatistics.length === 0">
+                    <td colspan="2" class="text-center text-muted">
+                      Belum ada data activity.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-
         </div>
-        
 
+        <!-- PACKAGE SUMMARY -->
+        <div class="col-lg-6 col-md-12" v-if="statistics">
+          <div class="card dashboard-card">
+            <div class="card-header">
+              <h6 class="mb-0">Package Summary (Paid)</h6>
+            </div>
 
-        
-        
+            <div class="card-body">
+              <div class="table-title">
+                Package Details
+              </div>
+
+              <table class="summary-table">
+                <thead>
+                  <tr>
+                    <td><strong>Package</strong></td>
+                    <td class="value"><strong>Total</strong></td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="row in packageStatistics" :key="row.id">
+                    <td>{{ row.package_label }}</td>
+                    <td class="value success">
+                      {{ row.paid_participants }}
+                    </td>
+                  </tr>
+
+                  <tr v-if="packageStatistics.length === 0">
+                    <td colspan="2" class="text-center text-muted">
+                      Belum ada data package.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -457,8 +478,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* ================= DASHBOARD SUMMARY HEADER ================= */
-
 .dashboard-summary-header{
   display:flex;
   justify-content:space-between;
@@ -471,8 +490,6 @@ onMounted(() => {
   font-weight:600;
   margin:0;
 }
-
-/* refresh button */
 
 .btn-refresh{
   border:1px solid #e5e7eb;
@@ -496,30 +513,23 @@ onMounted(() => {
   border-radius:12px;
 }
 
-/* chart container */
-
 .chart-box{
   height:180px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
-
-/* total row */
 
 .table-total{
   background:#f8f9fa;
 }
 
-/* mobile */
-
 @media (max-width:768px){
-
   .chart-box{
     height:160px;
     margin-bottom:10px;
   }
-
 }
-
-/* ================= LOADING OVERLAY ================= */
 
 .chart-loading{
   position:absolute;
@@ -530,8 +540,6 @@ onMounted(() => {
   justify-content:center;
   z-index:10;
 }
-
-/* spinner */
 
 .spinner{
   width:32px;
@@ -548,16 +556,12 @@ onMounted(() => {
   }
 }
 
-/* ================= TABLE TITLE ================= */
-
 .table-title{
   font-size:13px;
   font-weight:600;
   margin-bottom:8px;
   color:#374151;
 }
-
-/* ================= SUMMARY TABLE ================= */
 
 .summary-table{
   width:100%;
@@ -570,14 +574,10 @@ onMounted(() => {
   border-bottom:1px solid #f1f3f5;
 }
 
-/* VALUE COLUMN */
-
 .summary-table .value{
   text-align:right;
   font-weight:600;
 }
-
-/* COLORS */
 
 .value.success{
   color:#28a745;
@@ -591,27 +591,13 @@ onMounted(() => {
   color:#f39c12;
 }
 
-/* TOTAL ROW */
-
 .total-row td{
   border-top:2px solid #e9ecef;
   font-weight:700;
   padding-top:8px;
 }
 
-/* CHART AREA */
-
-.chart-box{
-  height:180px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-/* MOBILE */
-
 @media (max-width:768px){
-
   .chart-box{
     height:160px;
   }
@@ -619,6 +605,5 @@ onMounted(() => {
   .summary-table{
     font-size:12.5px;
   }
-
 }
 </style>

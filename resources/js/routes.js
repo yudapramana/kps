@@ -120,6 +120,16 @@ export default [
         name: 'admin.papers.final',
         component: () => import('./pages/papers/PaperFinalList.vue'),
       },
+      {
+        path: 'pricing-summary',
+        name: 'admin.pricing.summary',
+        component: () => import('./pages/pricing/PricingItemSummary.vue'),
+      },
+      {
+        path: 'activity-participants',
+        name: 'admin.activity-participants',
+        component: () => import('./pages/participants/ActivityParticipantList.vue'),
+      },
 
 
 

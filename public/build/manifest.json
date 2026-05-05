@@ -1,44 +1,44 @@
 {
-  "_EventParticipantHelpers-D0tahj-Q.js": {
-    "file": "assets/EventParticipantHelpers-D0tahj-Q.js",
+  "_EventParticipantHelpers-B74JOM_A.js": {
+    "file": "assets/EventParticipantHelpers-B74JOM_A.js",
     "name": "EventParticipantHelpers",
     "imports": [
       "resources/js/app.js",
-      "_pinia-BOH8-c0n.js"
+      "_pinia-BA4DjMkl.js"
     ]
   },
-  "_LoadingStore-CkbzEJkH.js": {
-    "file": "assets/LoadingStore-CkbzEJkH.js",
+  "_LoadingStore-DcHjIMCH.js": {
+    "file": "assets/LoadingStore-DcHjIMCH.js",
     "name": "LoadingStore",
     "imports": [
-      "_pinia-BOH8-c0n.js"
+      "_pinia-BA4DjMkl.js"
     ]
   },
-  "_MasterDataStore-4_BuKS7f.js": {
-    "file": "assets/MasterDataStore-4_BuKS7f.js",
+  "_MasterDataStore-CzLDcGl6.js": {
+    "file": "assets/MasterDataStore-CzLDcGl6.js",
     "name": "MasterDataStore",
     "imports": [
       "resources/js/app.js",
-      "_pinia-BOH8-c0n.js"
+      "_pinia-BA4DjMkl.js"
     ]
   },
-  "_PreviewModal-BPDs8aiE.js": {
-    "file": "assets/PreviewModal-BPDs8aiE.js",
+  "_PreviewModal-C4dESyRF.js": {
+    "file": "assets/PreviewModal-C4dESyRF.js",
     "name": "PreviewModal",
     "imports": [
       "resources/js/app.js",
-      "_pinia-BOH8-c0n.js"
+      "_pinia-BA4DjMkl.js"
     ]
   },
-  "_ReRegisterModal-!~{01p}~.js": {
+  "_ReRegisterModal-!~{01r}~.js": {
     "file": "assets/ReRegisterModal-DJt19FZ_.css",
-    "src": "_ReRegisterModal-!~{01p}~.js"
+    "src": "_ReRegisterModal-!~{01r}~.js"
   },
-  "_ReRegisterModal-COs_sGnO.js": {
-    "file": "assets/ReRegisterModal-COs_sGnO.js",
+  "_ReRegisterModal-SCE6Ys8S.js": {
+    "file": "assets/ReRegisterModal-SCE6Ys8S.js",
     "name": "ReRegisterModal",
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -46,16 +46,16 @@
       "assets/ReRegisterModal-DJt19FZ_.css"
     ]
   },
-  "_ViewParticipantModal-BoqxySe_.js": {
-    "file": "assets/ViewParticipantModal-BoqxySe_.js",
+  "_ViewParticipantModal-Dwt94aAU.js": {
+    "file": "assets/ViewParticipantModal-Dwt94aAU.js",
     "name": "ViewParticipantModal",
     "imports": [
-      "_EventParticipantHelpers-D0tahj-Q.js",
-      "_pinia-BOH8-c0n.js"
+      "_EventParticipantHelpers-B74JOM_A.js",
+      "_pinia-BA4DjMkl.js"
     ]
   },
-  "_api-B0hFIBev.js": {
-    "file": "assets/api-B0hFIBev.js",
+  "_api-_MTOr7kc.js": {
+    "file": "assets/api-_MTOr7kc.js",
     "name": "api",
     "imports": [
       "resources/js/app.js"
@@ -65,16 +65,16 @@
     "file": "assets/helper-D4kaxrhs.js",
     "name": "helper"
   },
-  "_pinia-BOH8-c0n.js": {
-    "file": "assets/pinia-BOH8-c0n.js",
+  "_pinia-BA4DjMkl.js": {
+    "file": "assets/pinia-BA4DjMkl.js",
     "name": "pinia"
   },
-  "_style-!~{01q}~.js": {
+  "_style-!~{01s}~.js": {
     "file": "assets/style-jZV0Iysi.css",
-    "src": "_style-!~{01q}~.js"
+    "src": "_style-!~{01s}~.js"
   },
-  "_style-BLYPINgZ.js": {
-    "file": "assets/style-BLYPINgZ.js",
+  "_style-CfqIxOi2.js": {
+    "file": "assets/style-CfqIxOi2.js",
     "name": "style",
     "imports": [
       "resources/js/app.js"
@@ -92,12 +92,12 @@
     "file": "assets/sweetalert2.esm.all-9Qm2jZ7z.js",
     "name": "sweetalert2.esm.all"
   },
-  "_toastr-!~{01r}~.js": {
+  "_toastr-!~{01t}~.js": {
     "file": "assets/toastr-DPlFYqzU.css",
-    "src": "_toastr-!~{01r}~.js"
+    "src": "_toastr-!~{01t}~.js"
   },
-  "_toastr-BBXqdHiN.js": {
-    "file": "assets/toastr-BBXqdHiN.js",
+  "_toastr-oUUjn0N_.js": {
+    "file": "assets/toastr-oUUjn0N_.js",
     "name": "toastr",
     "imports": [
       "resources/js/app.js"
@@ -204,12 +204,12 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-CmQqokR3.js",
+    "file": "assets/app-C8V922oB.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js"
+      "_pinia-BA4DjMkl.js"
     ],
     "dynamicImports": [
       "resources/js/pages/Landing.vue",
@@ -235,6 +235,8 @@
       "resources/js/pages/papers/PaperTypeList.vue",
       "resources/js/pages/papers/PaperReviewList.vue",
       "resources/js/pages/papers/PaperFinalList.vue",
+      "resources/js/pages/pricing/PricingItemSummary.vue",
+      "resources/js/pages/participants/ActivityParticipantList.vue",
       "resources/js/pages/core/CoreBranchesGroupsCategories.vue",
       "resources/js/pages/core/CoreListFields.vue",
       "resources/js/pages/core/CoreMedalRules.vue",
@@ -307,133 +309,133 @@
     ]
   },
   "resources/js/components/Dashboard.vue": {
-    "file": "assets/Dashboard-Csp6VBi1.js",
+    "file": "assets/Dashboard-CAavD5fd.js",
     "name": "Dashboard",
     "src": "resources/js/components/Dashboard.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_MasterDataStore-4_BuKS7f.js",
-      "_pinia-BOH8-c0n.js"
+      "_MasterDataStore-CzLDcGl6.js",
+      "_pinia-BA4DjMkl.js"
     ],
     "css": [
-      "assets/Dashboard-N-WUa8Eg.css"
+      "assets/Dashboard-egvafUpk.css"
     ]
   },
   "resources/js/components/NotFound.vue": {
-    "file": "assets/NotFound-CmELYufZ.js",
+    "file": "assets/NotFound-D1QMQ0Ye.js",
     "name": "NotFound",
     "src": "resources/js/components/NotFound.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_pinia-BOH8-c0n.js"
+      "_pinia-BA4DjMkl.js"
     ],
     "css": [
       "assets/NotFound-CyK4GlMZ.css"
     ]
   },
   "resources/js/components/UserDashboard.vue": {
-    "file": "assets/UserDashboard-BT_CdbaT.js",
+    "file": "assets/UserDashboard-BUY8I4nv.js",
     "name": "UserDashboard",
     "src": "resources/js/components/UserDashboard.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_style-BLYPINgZ.js",
-      "_MasterDataStore-4_BuKS7f.js",
-      "_pinia-BOH8-c0n.js"
+      "_style-CfqIxOi2.js",
+      "_MasterDataStore-CzLDcGl6.js",
+      "_pinia-BA4DjMkl.js"
     ],
     "css": [
       "assets/UserDashboard-D2iARq3-.css"
     ]
   },
   "resources/js/landing.js": {
-    "file": "assets/landing-BDOcdZK7.js",
+    "file": "assets/landing-DuoFsy3m.js",
     "name": "landing",
     "src": "resources/js/landing.js",
     "isEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/pages/Landing.vue"
     ]
   },
   "resources/js/pages/EventParticipants.vue": {
-    "file": "assets/EventParticipants-BoCPkWFz.js",
+    "file": "assets/EventParticipants-D_yIZGGJ.js",
     "name": "EventParticipants",
     "src": "resources/js/pages/EventParticipants.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js",
-      "_MasterDataStore-4_BuKS7f.js",
-      "_ViewParticipantModal-BoqxySe_.js",
-      "_EventParticipantHelpers-D0tahj-Q.js"
+      "_MasterDataStore-CzLDcGl6.js",
+      "_ViewParticipantModal-Dwt94aAU.js",
+      "_EventParticipantHelpers-B74JOM_A.js"
     ],
     "css": [
       "assets/EventParticipants-_9R3gwvs.css"
     ]
   },
   "resources/js/pages/EventParticipantsFinal.vue": {
-    "file": "assets/EventParticipantsFinal-BfWOUK24.js",
+    "file": "assets/EventParticipantsFinal-DYW1_LWR.js",
     "name": "EventParticipantsFinal",
     "src": "resources/js/pages/EventParticipantsFinal.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js",
-      "_ViewParticipantModal-BoqxySe_.js",
-      "_ReRegisterModal-COs_sGnO.js",
-      "_EventParticipantHelpers-D0tahj-Q.js"
+      "_ViewParticipantModal-Dwt94aAU.js",
+      "_ReRegisterModal-SCE6Ys8S.js",
+      "_EventParticipantHelpers-B74JOM_A.js"
     ],
     "css": [
       "assets/EventParticipantsFinal-2_XvirjP.css"
     ]
   },
   "resources/js/pages/EventParticipantsRegistration.vue": {
-    "file": "assets/EventParticipantsRegistration-uWHdW_kg.js",
+    "file": "assets/EventParticipantsRegistration-hoK-X6MP.js",
     "name": "EventParticipantsRegistration",
     "src": "resources/js/pages/EventParticipantsRegistration.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js",
-      "_MasterDataStore-4_BuKS7f.js",
-      "_ViewParticipantModal-BoqxySe_.js",
-      "_EventParticipantHelpers-D0tahj-Q.js"
+      "_MasterDataStore-CzLDcGl6.js",
+      "_ViewParticipantModal-Dwt94aAU.js",
+      "_EventParticipantHelpers-B74JOM_A.js"
     ],
     "css": [
       "assets/EventParticipantsRegistration-tqSsoR9w.css"
     ]
   },
   "resources/js/pages/EventParticipantsReregistration.vue": {
-    "file": "assets/EventParticipantsReregistration-C4nBcZKo.js",
+    "file": "assets/EventParticipantsReregistration-CUfMgFFl.js",
     "name": "EventParticipantsReregistration",
     "src": "resources/js/pages/EventParticipantsReregistration.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js",
-      "_MasterDataStore-4_BuKS7f.js",
-      "_ViewParticipantModal-BoqxySe_.js",
-      "_ReRegisterModal-COs_sGnO.js",
-      "_EventParticipantHelpers-D0tahj-Q.js"
+      "_MasterDataStore-CzLDcGl6.js",
+      "_ViewParticipantModal-Dwt94aAU.js",
+      "_ReRegisterModal-SCE6Ys8S.js",
+      "_EventParticipantHelpers-B74JOM_A.js"
     ],
     "css": [
       "assets/EventParticipantsReregistration-BYBIHjs_.css"
     ]
   },
   "resources/js/pages/KokardeExport.vue": {
-    "file": "assets/KokardeExport-DwUrvVBo.js",
+    "file": "assets/KokardeExport-6u277R6x.js",
     "name": "KokardeExport",
     "src": "resources/js/pages/KokardeExport.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -442,59 +444,59 @@
     ]
   },
   "resources/js/pages/Landing.vue": {
-    "file": "assets/Landing-BLEi8Eu4.js",
+    "file": "assets/Landing-Cnc9FhYz.js",
     "name": "Landing",
     "src": "resources/js/pages/Landing.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js"
+      "_pinia-BA4DjMkl.js"
     ]
   },
   "resources/js/pages/activities/ActivityList.vue": {
-    "file": "assets/ActivityList-DxVtupaJ.js",
+    "file": "assets/ActivityList-BnSeP4p1.js",
     "name": "ActivityList",
     "src": "resources/js/pages/activities/ActivityList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/admins/AdminList.vue": {
-    "file": "assets/AdminList-ByApYHq7.js",
+    "file": "assets/AdminList-qiywTCmo.js",
     "name": "AdminList",
     "src": "resources/js/pages/admins/AdminList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
-      "_toastr-BBXqdHiN.js",
-      "_MasterDataStore-4_BuKS7f.js",
+      "_toastr-oUUjn0N_.js",
+      "_MasterDataStore-CzLDcGl6.js",
       "_helper-D4kaxrhs.js"
     ]
   },
   "resources/js/pages/auth/Login.vue": {
-    "file": "assets/Login-CkQgiN5T.js",
+    "file": "assets/Login-NsTjYvk1.js",
     "name": "Login",
     "src": "resources/js/pages/auth/Login.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
-      "_MasterDataStore-4_BuKS7f.js"
+      "_MasterDataStore-CzLDcGl6.js"
     ],
     "css": [
       "assets/Login-P-aBIJCe.css"
     ]
   },
   "resources/js/pages/auth/ResetPassword.vue": {
-    "file": "assets/ResetPassword-CYJthH8r.js",
+    "file": "assets/ResetPassword-BxR1BS0N.js",
     "name": "ResetPassword",
     "src": "resources/js/pages/auth/ResetPassword.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js"
     ],
     "css": [
@@ -502,23 +504,23 @@
     ]
   },
   "resources/js/pages/banks/BankList.vue": {
-    "file": "assets/BankList-CAudDIQV.js",
+    "file": "assets/BankList-DLTksaMJ.js",
     "name": "BankList",
     "src": "resources/js/pages/banks/BankList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/competition/EventCompetitionBranchList.vue": {
-    "file": "assets/EventCompetitionBranchList-CpHbQTM-.js",
+    "file": "assets/EventCompetitionBranchList-DInpl50e.js",
     "name": "EventCompetitionBranchList",
     "src": "resources/js/pages/competition/EventCompetitionBranchList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -527,12 +529,12 @@
     ]
   },
   "resources/js/pages/competition/MasterCompetitionBranchList.vue": {
-    "file": "assets/MasterCompetitionBranchList-C1UECxdk.js",
+    "file": "assets/MasterCompetitionBranchList-BuJOSH7W.js",
     "name": "MasterCompetitionBranchList",
     "src": "resources/js/pages/competition/MasterCompetitionBranchList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js"
     ],
     "css": [
@@ -540,12 +542,12 @@
     ]
   },
   "resources/js/pages/competition/MasterCompetitionCategoryList.vue": {
-    "file": "assets/MasterCompetitionCategoryList-DZAy84kr.js",
+    "file": "assets/MasterCompetitionCategoryList-8bpFtViq.js",
     "name": "MasterCompetitionCategoryList",
     "src": "resources/js/pages/competition/MasterCompetitionCategoryList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js"
     ],
     "css": [
@@ -553,53 +555,53 @@
     ]
   },
   "resources/js/pages/competition/MasterCompetitionGroupList.vue": {
-    "file": "assets/MasterCompetitionGroupList-CnWHd26u.js",
+    "file": "assets/MasterCompetitionGroupList-DvGi6xCg.js",
     "name": "MasterCompetitionGroupList",
     "src": "resources/js/pages/competition/MasterCompetitionGroupList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js"
     ]
   },
   "resources/js/pages/core/CoreBranchesGroupsCategories.vue": {
-    "file": "assets/CoreBranchesGroupsCategories-GpApa2Cl.js",
+    "file": "assets/CoreBranchesGroupsCategories-D_pHayYa.js",
     "name": "CoreBranchesGroupsCategories",
     "src": "resources/js/pages/core/CoreBranchesGroupsCategories.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js"
     ]
   },
   "resources/js/pages/core/CoreListFields.vue": {
-    "file": "assets/CoreListFields-C2g-AzuB.js",
+    "file": "assets/CoreListFields-CGReheOR.js",
     "name": "CoreListFields",
     "src": "resources/js/pages/core/CoreListFields.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js"
     ]
   },
   "resources/js/pages/core/CoreMedalRules.vue": {
-    "file": "assets/CoreMedalRules-bFk3O78f.js",
+    "file": "assets/CoreMedalRules-ZsG6XBLB.js",
     "name": "CoreMedalRules",
     "src": "resources/js/pages/core/CoreMedalRules.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js"
     ]
   },
   "resources/js/pages/docs/MyDocs.vue": {
-    "file": "assets/MyDocs-BienniO0.js",
+    "file": "assets/MyDocs-UwB3IGPJ.js",
     "name": "MyDocs",
     "src": "resources/js/pages/docs/MyDocs.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
-      "_MasterDataStore-4_BuKS7f.js",
+      "_pinia-BA4DjMkl.js",
+      "_MasterDataStore-CzLDcGl6.js",
       "resources/js/app.js"
     ],
     "css": [
@@ -607,66 +609,66 @@
     ]
   },
   "resources/js/pages/docs/UserDocs.vue": {
-    "file": "assets/UserDocs-BhLb0GNr.js",
+    "file": "assets/UserDocs-CWAnseFW.js",
     "name": "UserDocs",
     "src": "resources/js/pages/docs/UserDocs.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js",
-      "_MasterDataStore-4_BuKS7f.js",
-      "_PreviewModal-BPDs8aiE.js"
+      "_MasterDataStore-CzLDcGl6.js",
+      "_PreviewModal-C4dESyRF.js"
     ],
     "css": [
       "assets/UserDocs-BKwuFyAn.css"
     ]
   },
   "resources/js/pages/docs/UserUploadDoc.vue": {
-    "file": "assets/UserUploadDoc-Cae5mozp.js",
+    "file": "assets/UserUploadDoc-bQVRIG3k.js",
     "name": "UserUploadDoc",
     "src": "resources/js/pages/docs/UserUploadDoc.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js",
-      "_MasterDataStore-4_BuKS7f.js",
-      "_PreviewModal-BPDs8aiE.js"
+      "_MasterDataStore-CzLDcGl6.js",
+      "_PreviewModal-C4dESyRF.js"
     ],
     "css": [
       "assets/UserUploadDoc-BbTQiqZh.css"
     ]
   },
   "resources/js/pages/event/EventBranches.vue": {
-    "file": "assets/EventBranches-DR55xMN1.js",
+    "file": "assets/EventBranches-DdRC93sj.js",
     "name": "EventBranches",
     "src": "resources/js/pages/event/EventBranches.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/event/EventCategories.vue": {
-    "file": "assets/EventCategories-BW7MlQVm.js",
+    "file": "assets/EventCategories-DFdZocLu.js",
     "name": "EventCategories",
     "src": "resources/js/pages/event/EventCategories.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/event/EventCompetitionRankingV2.vue": {
-    "file": "assets/EventCompetitionRankingV2-BUosC8YR.js",
+    "file": "assets/EventCompetitionRankingV2-DxYtwVom.js",
     "name": "EventCompetitionRankingV2",
     "src": "resources/js/pages/event/EventCompetitionRankingV2.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -675,12 +677,12 @@
     ]
   },
   "resources/js/pages/event/EventCompetitionScores.vue": {
-    "file": "assets/EventCompetitionScores-DqRb-nl1.js",
+    "file": "assets/EventCompetitionScores-B2NXj0qN.js",
     "name": "EventCompetitionScores",
     "src": "resources/js/pages/event/EventCompetitionScores.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -689,12 +691,12 @@
     ]
   },
   "resources/js/pages/event/EventCompetitionScoresDetail.vue": {
-    "file": "assets/EventCompetitionScoresDetail-b-vH0NGx.js",
+    "file": "assets/EventCompetitionScoresDetail-BQUR9-lW.js",
     "name": "EventCompetitionScoresDetail",
     "src": "resources/js/pages/event/EventCompetitionScoresDetail.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -703,12 +705,12 @@
     ]
   },
   "resources/js/pages/event/EventCompetitionScoringV2.vue": {
-    "file": "assets/EventCompetitionScoringV2-CpRWGl-l.js",
+    "file": "assets/EventCompetitionScoringV2-GDev2t25.js",
     "name": "EventCompetitionScoringV2",
     "src": "resources/js/pages/event/EventCompetitionScoringV2.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -717,27 +719,27 @@
     ]
   },
   "resources/js/pages/event/EventCompetitionsTree.vue": {
-    "file": "assets/EventCompetitionsTree-ChTDuuwm.js",
+    "file": "assets/EventCompetitionsTree-ROLpE8ji.js",
     "name": "EventCompetitionsTree",
     "src": "resources/js/pages/event/EventCompetitionsTree.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js",
-      "_style-BLYPINgZ.js"
+      "_style-CfqIxOi2.js"
     ],
     "css": [
       "assets/EventCompetitionsTree-_VBvAum9.css"
     ]
   },
   "resources/js/pages/event/EventFieldComponents.vue": {
-    "file": "assets/EventFieldComponents-CN-UbY_d.js",
+    "file": "assets/EventFieldComponents-Rzq3x7VC.js",
     "name": "EventFieldComponents",
     "src": "resources/js/pages/event/EventFieldComponents.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -746,23 +748,23 @@
     ]
   },
   "resources/js/pages/event/EventGroups.vue": {
-    "file": "assets/EventGroups-BKSbtLYi.js",
+    "file": "assets/EventGroups-BD-wc_op.js",
     "name": "EventGroups",
     "src": "resources/js/pages/event/EventGroups.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/event/EventJudgePanelList.vue": {
-    "file": "assets/EventJudgePanelList-BzsBOJHW.js",
+    "file": "assets/EventJudgePanelList-CDOhCM2K.js",
     "name": "EventJudgePanelList",
     "src": "resources/js/pages/event/EventJudgePanelList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -771,12 +773,12 @@
     ]
   },
   "resources/js/pages/event/EventJudgePanels.vue": {
-    "file": "assets/EventJudgePanels-BHzRZ4Pi.js",
+    "file": "assets/EventJudgePanels-DH6u7G9h.js",
     "name": "EventJudgePanels",
     "src": "resources/js/pages/event/EventJudgePanels.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -785,27 +787,27 @@
     ]
   },
   "resources/js/pages/event/EventJudges.vue": {
-    "file": "assets/EventJudges-CsXQw2FU.js",
+    "file": "assets/EventJudges-9SLJdNer.js",
     "name": "EventJudges",
     "src": "resources/js/pages/event/EventJudges.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js",
-      "_EventParticipantHelpers-D0tahj-Q.js"
+      "_EventParticipantHelpers-B74JOM_A.js"
     ],
     "css": [
       "assets/EventJudges-DFDSsuGc.css"
     ]
   },
   "resources/js/pages/event/EventJudgesUsers.vue": {
-    "file": "assets/EventJudgesUsers-p3k7JSGb.js",
+    "file": "assets/EventJudgesUsers-BOVhMvRd.js",
     "name": "EventJudgesUsers",
     "src": "resources/js/pages/event/EventJudgesUsers.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -814,22 +816,22 @@
     ]
   },
   "resources/js/pages/event/EventList.vue": {
-    "file": "assets/EventList-Ds74WQvc.js",
+    "file": "assets/EventList-Uuiouk9z.js",
     "name": "EventList",
     "src": "resources/js/pages/event/EventList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js"
     ]
   },
   "resources/js/pages/event/EventLocationList.vue": {
-    "file": "assets/EventLocationList-D2nppymj.js",
+    "file": "assets/EventLocationList-BFf5ofUJ.js",
     "name": "EventLocationList",
     "src": "resources/js/pages/event/EventLocationList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js"
     ],
     "css": [
@@ -841,163 +843,163 @@
     ]
   },
   "resources/js/pages/event/EventMedalRules.vue": {
-    "file": "assets/EventMedalRules-DfUVsa3w.js",
+    "file": "assets/EventMedalRules-CdHdJEB3.js",
     "name": "EventMedalRules",
     "src": "resources/js/pages/event/EventMedalRules.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/event/EventStageList.vue": {
-    "file": "assets/EventStageList-BHc7QS40.js",
+    "file": "assets/EventStageList-DoYv_NKY.js",
     "name": "EventStageList",
     "src": "resources/js/pages/event/EventStageList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/event/EventUserList.vue": {
-    "file": "assets/EventUserList-CQ-i8r30.js",
+    "file": "assets/EventUserList-xyQcR3q5.js",
     "name": "EventUserList",
     "src": "resources/js/pages/event/EventUserList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/event/MasterStageList.vue": {
-    "file": "assets/MasterStageList-DMXDUSVp.js",
+    "file": "assets/MasterStageList-DbddgZw5.js",
     "name": "MasterStageList",
     "src": "resources/js/pages/event/MasterStageList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js"
     ]
   },
   "resources/js/pages/event_contingents/EventContingentStandings.vue": {
-    "file": "assets/EventContingentStandings-rx6B65Pi.js",
+    "file": "assets/EventContingentStandings-Cf8UHOb-.js",
     "name": "EventContingentStandings",
     "src": "resources/js/pages/event_contingents/EventContingentStandings.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js",
-      "_pinia-BOH8-c0n.js"
+      "_pinia-BA4DjMkl.js"
     ],
     "css": [
       "assets/EventContingentStandings-DBGw8s8N.css"
     ]
   },
   "resources/js/pages/events/EventDayList.vue": {
-    "file": "assets/EventDayList-D7elNcTi.js",
+    "file": "assets/EventDayList-VY-3uKw2.js",
     "name": "EventDayList",
     "src": "resources/js/pages/events/EventDayList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/events/EventList.vue": {
-    "file": "assets/EventList-Am_LngVM.js",
+    "file": "assets/EventList-CAurbZaJ.js",
     "name": "EventList",
     "src": "resources/js/pages/events/EventList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/finance/FinanceDashboard.vue": {
-    "file": "assets/FinanceDashboard-BNYEPeXz.js",
+    "file": "assets/FinanceDashboard-CERzcF5q.js",
     "name": "FinanceDashboard",
     "src": "resources/js/pages/finance/FinanceDashboard.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js",
-      "_pinia-BOH8-c0n.js"
+      "_pinia-BA4DjMkl.js"
     ]
   },
   "resources/js/pages/master/MasterBranches.vue": {
-    "file": "assets/MasterBranches-tJ5bv1Xc.js",
+    "file": "assets/MasterBranches-svBUk3uL.js",
     "name": "MasterBranches",
     "src": "resources/js/pages/master/MasterBranches.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/master/MasterCategories.vue": {
-    "file": "assets/MasterCategories-Br4flHlA.js",
+    "file": "assets/MasterCategories-1zIN-5Z4.js",
     "name": "MasterCategories",
     "src": "resources/js/pages/master/MasterCategories.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/master/MasterFieldComponents.vue": {
-    "file": "assets/MasterFieldComponents-BYgpyWyV.js",
+    "file": "assets/MasterFieldComponents-DBjyKhC6.js",
     "name": "MasterFieldComponents",
     "src": "resources/js/pages/master/MasterFieldComponents.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/master/MasterGroups.vue": {
-    "file": "assets/MasterGroups-f4Mi5reU.js",
+    "file": "assets/MasterGroups-U-yVQV6v.js",
     "name": "MasterGroups",
     "src": "resources/js/pages/master/MasterGroups.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/org_reports/Orgreports.vue": {
-    "file": "assets/Orgreports-BsXMhmu6.js",
+    "file": "assets/Orgreports-DOVEgmIq.js",
     "name": "Orgreports",
     "src": "resources/js/pages/org_reports/Orgreports.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_helper-D4kaxrhs.js",
-      "_LoadingStore-CkbzEJkH.js",
+      "_LoadingStore-DcHjIMCH.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js",
-      "_MasterDataStore-4_BuKS7f.js"
+      "_MasterDataStore-CzLDcGl6.js"
     ],
     "css": [
       "assets/Orgreports-BK32I0hJ.css"
     ]
   },
   "resources/js/pages/papers/PaperFinalList.vue": {
-    "file": "assets/PaperFinalList-DyONvqNl.js",
+    "file": "assets/PaperFinalList-OisOIE91.js",
     "name": "PaperFinalList",
     "src": "resources/js/pages/papers/PaperFinalList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -1006,12 +1008,12 @@
     ]
   },
   "resources/js/pages/papers/PaperReviewList.vue": {
-    "file": "assets/PaperReviewList-DeY6UF2C.js",
+    "file": "assets/PaperReviewList-CN1fnIQ7.js",
     "name": "PaperReviewList",
     "src": "resources/js/pages/papers/PaperReviewList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -1020,23 +1022,23 @@
     ]
   },
   "resources/js/pages/papers/PaperTypeList.vue": {
-    "file": "assets/PaperTypeList-yzwmiRE2.js",
+    "file": "assets/PaperTypeList-CgreFeSe.js",
     "name": "PaperTypeList",
     "src": "resources/js/pages/papers/PaperTypeList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/participant/ParticipantReregisterList.vue": {
-    "file": "assets/ParticipantReregisterList-D-xVxA4Q.js",
+    "file": "assets/ParticipantReregisterList-5OhfaqVa.js",
     "name": "ParticipantReregisterList",
     "src": "resources/js/pages/participant/ParticipantReregisterList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -1045,12 +1047,12 @@
     ]
   },
   "resources/js/pages/participant/ParticipantStatusList.vue": {
-    "file": "assets/ParticipantStatusList-BB_sUDcC.js",
+    "file": "assets/ParticipantStatusList-M5MXAIEx.js",
     "name": "ParticipantStatusList",
     "src": "resources/js/pages/participant/ParticipantStatusList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -1058,91 +1060,111 @@
       "assets/ParticipantStatusList-DH3dWb-_.css"
     ]
   },
+  "resources/js/pages/participants/ActivityParticipantList.vue": {
+    "file": "assets/ActivityParticipantList-DQ7PsJBx.js",
+    "name": "ActivityParticipantList",
+    "src": "resources/js/pages/participants/ActivityParticipantList.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "_pinia-BA4DjMkl.js",
+      "resources/js/app.js"
+    ]
+  },
   "resources/js/pages/participants/ParticipantCategoryList.vue": {
-    "file": "assets/ParticipantCategoryList-5LajFHVm.js",
+    "file": "assets/ParticipantCategoryList-CNVxS6Vr.js",
     "name": "ParticipantCategoryList",
     "src": "resources/js/pages/participants/ParticipantCategoryList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/participants/ParticipantList.vue": {
-    "file": "assets/ParticipantList-CT3W2ZSk.js",
+    "file": "assets/ParticipantList-D89aHoV-.js",
     "name": "ParticipantList",
     "src": "resources/js/pages/participants/ParticipantList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js"
     ]
   },
   "resources/js/pages/payments/PaymentList.vue": {
-    "file": "assets/PaymentList-5TfWc8EA.js",
+    "file": "assets/PaymentList-CrwzPgue.js",
     "name": "PaymentList",
     "src": "resources/js/pages/payments/PaymentList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js"
     ]
   },
   "resources/js/pages/payments/PaymentVerificationHistory.vue": {
-    "file": "assets/PaymentVerificationHistory-Dg74Fbsl.js",
+    "file": "assets/PaymentVerificationHistory-B31AVepj.js",
     "name": "PaymentVerificationHistory",
     "src": "resources/js/pages/payments/PaymentVerificationHistory.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
-      "_api-B0hFIBev.js",
+      "_pinia-BA4DjMkl.js",
+      "_api-_MTOr7kc.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js",
       "resources/js/app.js"
     ]
   },
   "resources/js/pages/payments/PaymentVerificationQueue.vue": {
-    "file": "assets/PaymentVerificationQueue-DB8CjgzQ.js",
+    "file": "assets/PaymentVerificationQueue-CdBf54cS.js",
     "name": "PaymentVerificationQueue",
     "src": "resources/js/pages/payments/PaymentVerificationQueue.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
-      "_api-B0hFIBev.js",
+      "_pinia-BA4DjMkl.js",
+      "_api-_MTOr7kc.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/permission/PermissionRoleList.vue": {
-    "file": "assets/PermissionRoleList-Dq2aNORJ.js",
+    "file": "assets/PermissionRoleList-jxQevWzR.js",
     "name": "PermissionRoleList",
     "src": "resources/js/pages/permission/PermissionRoleList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/pricing/PricingItemList.vue": {
-    "file": "assets/PricingItemList-DC-bHuRw.js",
+    "file": "assets/PricingItemList-0x6MZafV.js",
     "name": "PricingItemList",
     "src": "resources/js/pages/pricing/PricingItemList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
+  "resources/js/pages/pricing/PricingItemSummary.vue": {
+    "file": "assets/PricingItemSummary-D_DVEIUp.js",
+    "name": "PricingItemSummary",
+    "src": "resources/js/pages/pricing/PricingItemSummary.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "_pinia-BA4DjMkl.js",
+      "resources/js/app.js"
+    ]
+  },
   "resources/js/pages/profile/ChangePassword.vue": {
-    "file": "assets/ChangePassword-CzgxBRfh.js",
+    "file": "assets/ChangePassword-oXJIutIC.js",
     "name": "ChangePassword",
     "src": "resources/js/pages/profile/ChangePassword.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
-      "_toastr-BBXqdHiN.js",
+      "_pinia-BA4DjMkl.js",
+      "_toastr-oUUjn0N_.js",
       "resources/js/app.js"
     ],
     "css": [
@@ -1150,13 +1172,13 @@
     ]
   },
   "resources/js/pages/profile/UpdateProfile.vue": {
-    "file": "assets/UpdateProfile-DDEB0lYR.js",
+    "file": "assets/UpdateProfile--yopbYZ8.js",
     "name": "UpdateProfile",
     "src": "resources/js/pages/profile/UpdateProfile.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
-      "_toastr-BBXqdHiN.js",
+      "_pinia-BA4DjMkl.js",
+      "_toastr-oUUjn0N_.js",
       "resources/js/app.js"
     ],
     "css": [
@@ -1164,55 +1186,55 @@
     ]
   },
   "resources/js/pages/profile/UserProfile.vue": {
-    "file": "assets/UserProfile-BsmfWNtQ.js",
+    "file": "assets/UserProfile-D5aY6sbj.js",
     "name": "UserProfile",
     "src": "resources/js/pages/profile/UserProfile.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
-      "_toastr-BBXqdHiN.js",
+      "_pinia-BA4DjMkl.js",
+      "_toastr-oUUjn0N_.js",
       "resources/js/app.js",
-      "_MasterDataStore-4_BuKS7f.js"
+      "_MasterDataStore-CzLDcGl6.js"
     ],
     "css": [
       "assets/UpdateProfile-BsM8eoC2.css"
     ]
   },
   "resources/js/pages/progress/DocProgress.vue": {
-    "file": "assets/DocProgress-BkZpOLrR.js",
+    "file": "assets/DocProgress-DuMfF6gL.js",
     "name": "DocProgress",
     "src": "resources/js/pages/progress/DocProgress.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
-      "_MasterDataStore-4_BuKS7f.js"
+      "_MasterDataStore-CzLDcGl6.js"
     ],
     "css": [
       "assets/DocProgress-B2wpZLpV.css"
     ]
   },
   "resources/js/pages/registrations/RegistrationList.vue": {
-    "file": "assets/RegistrationList-BMsn2j2Q.js",
+    "file": "assets/RegistrationList-CoEsMcrQ.js",
     "name": "RegistrationList",
     "src": "resources/js/pages/registrations/RegistrationList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/reports/ListReports.vue": {
-    "file": "assets/ListReports-CdCkgSTb.js",
+    "file": "assets/ListReports-C5Y0MbNP.js",
     "name": "ListReports",
     "src": "resources/js/pages/reports/ListReports.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_helper-D4kaxrhs.js",
-      "_LoadingStore-CkbzEJkH.js",
+      "_LoadingStore-DcHjIMCH.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
     "css": [
@@ -1220,23 +1242,23 @@
     ]
   },
   "resources/js/pages/rooms/RoomList.vue": {
-    "file": "assets/RoomList-D6lDmc-G.js",
+    "file": "assets/RoomList-yKUZhMe1.js",
     "name": "RoomList",
     "src": "resources/js/pages/rooms/RoomList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/sessions/SessionList.vue": {
-    "file": "assets/SessionList-D3LnyU9D.js",
+    "file": "assets/SessionList-BRo2mToc.js",
     "name": "SessionList",
     "src": "resources/js/pages/sessions/SessionList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -1245,56 +1267,56 @@
     ]
   },
   "resources/js/pages/settings/UpdateSetting.vue": {
-    "file": "assets/UpdateSetting-I1nRp1sF.js",
+    "file": "assets/UpdateSetting-BfTJMm5m.js",
     "name": "UpdateSetting",
     "src": "resources/js/pages/settings/UpdateSetting.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
-      "_toastr-BBXqdHiN.js"
+      "_toastr-oUUjn0N_.js"
     ]
   },
   "resources/js/pages/users/UserDocList.vue": {
-    "file": "assets/UserDocList-BWjdMFbd.js",
+    "file": "assets/UserDocList-ClmMiNvZ.js",
     "name": "UserDocList",
     "src": "resources/js/pages/users/UserDocList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js"
     ]
   },
   "resources/js/pages/users/UserList.vue": {
-    "file": "assets/UserList-BgzBxfoX.js",
+    "file": "assets/UserList-a2L-WF56.js",
     "name": "UserList",
     "src": "resources/js/pages/users/UserList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ]
   },
   "resources/js/pages/vervals/VervalHistory.vue": {
-    "file": "assets/VervalHistory-BgasQMl0.js",
+    "file": "assets/VervalHistory-DBzKoB1a.js",
     "name": "VervalHistory",
     "src": "resources/js/pages/vervals/VervalHistory.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
-      "_toastr-BBXqdHiN.js",
+      "_toastr-oUUjn0N_.js",
       "_helper-D4kaxrhs.js"
     ]
   },
   "resources/js/pages/vervals/VervalList.vue": {
-    "file": "assets/VervalList-BUyotnO9.js",
+    "file": "assets/VervalList-BS43PXfv.js",
     "name": "VervalList",
     "src": "resources/js/pages/vervals/VervalList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
       "_sweetalert2.esm.all-9Qm2jZ7z.js"
     ],
@@ -1303,29 +1325,29 @@
     ]
   },
   "resources/js/pages/workunits/WorkUnitList.vue": {
-    "file": "assets/WorkUnitList-suZCivVD.js",
+    "file": "assets/WorkUnitList-BrmY24AC.js",
     "name": "WorkUnitList",
     "src": "resources/js/pages/workunits/WorkUnitList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_pinia-BOH8-c0n.js",
+      "_pinia-BA4DjMkl.js",
       "resources/js/app.js",
-      "_style-BLYPINgZ.js"
+      "_style-CfqIxOi2.js"
     ],
     "css": [
       "assets/WorkUnitList-zLuTH2RZ.css"
     ]
   },
   "resources/js/pages/workunits/WorkUnitMonitor.vue": {
-    "file": "assets/WorkUnitMonitor-BDJxbGte.js",
+    "file": "assets/WorkUnitMonitor-34PsyGEz.js",
     "name": "WorkUnitMonitor",
     "src": "resources/js/pages/workunits/WorkUnitMonitor.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_style-BLYPINgZ.js",
-      "_MasterDataStore-4_BuKS7f.js",
-      "_pinia-BOH8-c0n.js"
+      "_style-CfqIxOi2.js",
+      "_MasterDataStore-CzLDcGl6.js",
+      "_pinia-BA4DjMkl.js"
     ],
     "css": [
       "assets/WorkUnitMonitor-Ci30l-JB.css"

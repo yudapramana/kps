@@ -59,4 +59,16 @@ class Participant extends Model
             ->where('payment_step', 'paid')
             ->exists();
     }
+
+    public function registrationItems()
+    {
+        return $this->hasManyThrough(
+            \App\Models\RegistrationItem::class,
+            \App\Models\Registration::class,
+            'participant_id',   // Foreign key on registrations table
+            'registration_id',  // Foreign key on registration_items table
+            'id',               // Local key on participants table
+            'id'                // Local key on registrations table
+        );
+    }
 }

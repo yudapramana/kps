@@ -32,6 +32,11 @@ class Registration extends Model
         return $this->hasMany(RegistrationItem::class);
     }
 
+    public function registrationItems()
+    {
+        return $this->hasMany(\App\Models\RegistrationItem::class);
+    }
+
     public function payment()
     {
         return $this->hasOne(Payment::class);
