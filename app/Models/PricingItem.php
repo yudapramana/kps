@@ -32,26 +32,22 @@ class PricingItem extends Model
 
     public function getPackageLabelAttribute()
     {
-        // PACKAGE 4 (NURSE)
-        if (!$this->includes_symposium && $this->workshop_count === 1) {
-            $label = 'Workshop for Nurse';
-        } else {
+        $includesSymposium = (bool) $this->includes_symposium;
+        $workshopCount = (int) $this->workshop_count;
 
-            $label = 'Symposium';
-
-            if ($this->workshop_count > 0) {
-                $workshopText = $this->workshop_count == 1
-                    ? '1 Workshop'
-                    : $this->workshop_count . ' Workshops';
-
-                $label .= ' + ' . $workshopText;
-            }
+        if ($includesSymposium === false && $workshopCount === 1) {
+            return 'Workshop for Nurse';
         }
 
-        // Bird label (optional safety)
-        // if ($this->bird_type) {
-        //     $label .= ' (' . strtoupper($this->bird_type) . ' BIRD)';
-        // }
+        $label = 'Symposium';
+
+        if ($workshopCount > 0) {
+            $workshopText = $workshopCount === 1
+                ? '1 Workshop'
+                : $workshopCount . ' Workshops';
+
+            $label .= ' + ' . $workshopText;
+        }
 
         return $label;
     }
