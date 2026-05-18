@@ -82,7 +82,7 @@
             <thead class="thead-light">
               <tr>
                 <th style="width:40px">#</th>
-                <th>Nama</th>
+                <th>PIDN</th>
                 <th>Judul</th>
                 <th style="width:140px">Tipe</th>
                 <th style="width:140px">Status</th>
@@ -108,7 +108,7 @@
 
                 <td>
                   <strong>
-                    {{ item.participant.full_name }}
+                    #{{ String(item.id).padStart(3, '0') }}
                   </strong>
                 </td>
                 
@@ -198,12 +198,12 @@
             <!-- BASIC INFO -->
             <div class="mb-3">
             <h5 class="fw-bold mb-1">
-                {{ selectedPaper.title }}
+                <span style="font-size: larger; font-weight: bolder;">#{{ String(selectedPaper.id).padStart(3, '0') }}</span> {{ selectedPaper.title }}
             </h5>
 
-            <div class="text-muted small mb-1">
+            <!-- <div class="text-muted small mb-1">
                 {{ selectedPaper.authors.map(a => a.name).join(', ') }}
-            </div>
+            </div> -->
 
             <!-- META DATE -->
             <div class="small text-muted">
