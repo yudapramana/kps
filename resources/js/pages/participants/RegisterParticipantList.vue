@@ -1,0 +1,516 @@
+<template>
+  <!-- ================= HEADER ================= -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="mb-1">Activity Participants</h1>
+          <p class="mb-0 text-muted text-sm">
+            Daftar peserta berdasarkan workshop atau general symposium.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONTENT ================= -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card">
+        <!-- FILTER -->
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center w-100 flex-wrap">
+            <!-- LEFT FILTER -->
+            <div class="d-flex align-items-center mb-2 mb-md-0 flex-wrap">
+              <!-- PER PAGE -->
+              <div class="mr-3 mb-2">
+                <label class="mb-0 mr-1 text-sm text-muted">Tampilkan</label>
+                <select
+                  v-model.number="perPage"
+                  class="form-control form-control-sm d-inline-block w-auto"
+                >
+                  <option :value="10">10</option>
+                  <option :value="25">25</option>
+                  <option :value="50">50</option>
+                  <option :value="100">100</option>
+                </select>
+                <span class="text-sm text-muted ml-1">Entri</span>
+              </div>
+
+              <!-- ACTIVITY FILTER -->
+              <div class="mr-2 mb-2">
+                <select
+                  v-model="selectedActivity"
+                  class="form-control form-control-sm w-auto"
+                  style="min-width: 180px; max-width: 220px;"
+                >
+                  <option value="">-- Semua Activity --</option>
+                  <option
+                    v-for="a in activities"
+                    :key="String(a.id)"
+                    :value="String(a.id)"
+                  >
+                    {{ a.title }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- PARTICIPANT CATEGORY FILTER -->
+              <div class="mr-2 mb-2">
+                <select
+                  v-model="selectedParticipantCategory"
+                  class="form-control form-control-sm"
+                >
+                  <option value="">-- Semua Kategori Peserta --</option>
+                  <option
+                    v-for="category in participantCategories"
+                    :key="String(category.participant_category_id)"
+                    :value="String(category.participant_category_id)"
+                  >
+                    {{ category.name }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- PACKAGE FILTER -->
+              <div class="mr-2 mb-2">
+                <select
+                  v-model="selectedPackageFilter"
+                  class="form-control form-control-sm"
+                >
+                  <option value="">-- Semua Package --</option>
+                  <option value="symposium">Symposium saja</option>
+                  <option value="symposium_1_ws">Symposium + 1 Workshop</option>
+                  <option value="symposium_2_ws">Symposium + 2 Workshop</option>
+                  <option value="ws_nurse">Workshop for Nurse</option>
+                </select>
+              </div>
+
+              <!-- PAYMENT STEP FILTER -->
+              <div class="mr-2 mb-2">
+                <select
+                  v-model="selectedPaymentStep"
+                  class="form-control form-control-sm"
+                >
+                  <option value="">-- Semua Payment Step --</option>
+                  <option
+                    v-for="step in paymentSteps"
+                    :key="step.value"
+                    :value="step.value"
+                  >
+                    {{ step.label }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <!-- RIGHT: SEARCH -->
+            <div class="d-flex align-items-center mb-2">
+              <input
+                v-model="search"
+                type="text"
+                class="form-control form-control-sm w-auto mr-2"
+                style="min-width:260px"
+                placeholder="Cari nama / email / NIK / instansi..."
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="card-body table-responsive p-0">
+          <table class="table table-bordered table-hover text-sm mb-0">
+            <thead class="thead-light">
+              <tr>
+                <th style="width:40px">#</th>
+                <th>Nama</th>
+                <th>NIK</th>
+                <th>Kontak</th>
+
+                <th
+                  style="cursor:pointer; user-select:none;"
+                  @click="toggleSort('institution')"
+                >
+                  Instansi {{ getSortIcon('institution') }}
+                </th>
+
+                <th
+                  style="width:150px; cursor:pointer; user-select:none;"
+                  @click="toggleSort('participant_category.name')"
+                >
+                  Kategori {{ getSortIcon('participant_category.name') }}
+                </th>
+
+                <th
+                  style="width:170px; cursor:pointer; user-select:none;"
+                  @click="toggleSort('package_label')"
+                >
+                  Package {{ getSortIcon('package_label') }}
+                </th>
+
+                <th
+                  style="width:160px; cursor:pointer; user-select:none;"
+                  @click="toggleSort('payment_step')"
+                >
+                  Payment Step {{ getSortIcon('payment_step') }}
+                </th>
+
+                <th
+                  style="width:130px; cursor:pointer; user-select:none;"
+                  @click="toggleSort('payment_status')"
+                >
+                  Payment Status {{ getSortIcon('payment_status') }}
+                </th>
+
+                <th style="width:90px">Symposium</th>
+                <th style="width:220px">Workshop 1</th>
+                <th style="width:220px">Workshop 2</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr v-if="isLoading">
+                <td colspan="12" class="text-center">Memuat data...</td>
+              </tr>
+
+              <tr v-else-if="sortedItems.length === 0">
+                <td colspan="12" class="text-center text-muted">
+                  Belum ada peserta pada filter ini.
+                </td>
+              </tr>
+
+              <tr v-for="(item, index) in sortedItems" :key="item.id">
+                <td>
+                  {{ index + 1 + ((meta.current_page || 1) - 1) * (meta.per_page || perPage) }}
+                </td>
+
+                <td>
+                  <strong>{{ item.full_name }}</strong>
+                </td>
+
+                <td>
+                  <strong>{{ item.nik || '-' }}</strong>
+                </td>
+
+                <td>
+                  {{ item.email || '-' }}<br>
+                  <small class="text-muted">{{ item.mobile_phone || '-' }}</small>
+                </td>
+
+                <td>
+                  {{ item.institution || '-' }}
+                </td>
+
+                <td>
+                  <span
+                    class="badge"
+                    :class="getCategoryBadge(item.participant_category?.name)"
+                  >
+                    {{ item.participant_category?.name || '-' }}
+                  </span>
+                </td>
+
+                <td>
+                  <span class="badge badge-primary">
+                    {{ item.package_label || 'No Package Selected' }}
+                  </span>
+                </td>
+
+                <td>
+                  <span
+                    class="badge"
+                    :class="getPaymentStepBadge(item.payment_step)"
+                  >
+                    {{ formatPaymentStep(item.payment_step) }}
+                  </span>
+                </td>
+
+                <td>
+                  <span
+                    class="badge"
+                    :class="getPaymentStatusBadge(item.payment_status, item.is_paid)"
+                  >
+                    {{ formatPaymentStatus(item.payment_status, item.is_paid) }}
+                  </span>
+                </td>
+
+                <td>
+                  <span
+                    class="badge"
+                    :class="item.includes_symposium ? 'badge-success' : 'badge-secondary'"
+                  >
+                    {{ item.includes_symposium ? 'Ya' : 'Tidak' }}
+                  </span>
+                </td>
+
+                <td>
+                  <span v-if="item.workshop_1" class="badge badge-info">
+                    {{ item.workshop_1.title }}
+                  </span>
+                  <span v-else class="text-muted">-</span>
+                </td>
+
+                <td>
+                  <span v-if="item.workshop_2" class="badge badge-info">
+                    {{ item.workshop_2.title }}
+                  </span>
+                  <span v-else class="text-muted">-</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="card-footer clearfix py-2">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="text-muted text-sm">
+              Menampilkan {{ meta.from || 0 }} - {{ meta.to || 0 }} dari {{ meta.total || 0 }} data
+            </div>
+
+            <ul class="pagination pagination-sm m-0">
+              <li class="page-item" :class="{ disabled: (meta.current_page || 1) === 1 }">
+                <a
+                  href="#"
+                  class="page-link"
+                  @click.prevent="changePage((meta.current_page || 1) - 1)"
+                >
+                  «
+                </a>
+              </li>
+
+              <li class="page-item disabled">
+                <span class="page-link">
+                  Halaman {{ meta.current_page || 1 }} / {{ meta.last_page || 1 }}
+                </span>
+              </li>
+
+              <li class="page-item" :class="{ disabled: (meta.current_page || 1) === (meta.last_page || 1) || !meta.last_page }">
+                <a
+                  href="#"
+                  class="page-link"
+                  @click.prevent="changePage((meta.current_page || 1) + 1)"
+                >
+                  »
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup>
+import { ref, watch, onMounted, computed } from 'vue'
+import { useDebounceFn } from '@vueuse/core'
+import axios from 'axios'
+
+const items = ref([])
+const activities = ref([])
+const participantCategories = ref([])
+const paymentSteps = ref([])
+const meta = ref({})
+
+const search = ref('')
+const perPage = ref(50)
+const selectedActivity = ref('')
+const selectedParticipantCategory = ref('')
+const selectedPackageFilter = ref('')
+const selectedPaymentStep = ref('')
+const isLoading = ref(false)
+
+const sortKey = ref('')
+const sortDirection = ref('asc')
+
+const exportExcel = () => {
+  const params = new URLSearchParams()
+
+  if (search.value) params.append('search', search.value)
+  if (selectedActivity.value) params.append('activity_filter', selectedActivity.value)
+  if (selectedParticipantCategory.value) params.append('participant_category_id', selectedParticipantCategory.value)
+  if (selectedPackageFilter.value) params.append('package_filter', selectedPackageFilter.value)
+  if (selectedPaymentStep.value) params.append('payment_step', selectedPaymentStep.value)
+  params.append('per_page', String(perPage.value))
+
+  window.location.href = `/api/v1/register-participants/export?${params.toString()}`
+}
+
+const getCategoryBadge = (name) => {
+  if (!name) return 'badge-secondary'
+
+  const value = name.toLowerCase()
+
+  if (value.includes('general practitioner') || value.includes('internship')) {
+    return 'badge-primary'
+  }
+
+  if (value.includes('speaker') || value.includes('faculty') || value.includes('sponsor')) {
+    return 'badge-dark'
+  }
+
+  if (value.includes('specialist')) {
+    return 'badge-danger'
+  }
+
+  if (value.includes('student') || value.includes('nurse')) {
+    return 'badge-success'
+  }
+
+  return 'badge-secondary'
+}
+
+const formatPaymentStep = (step) => {
+  const map = {
+    choose_bank: 'Choose Bank',
+    waiting_transfer: 'Waiting Transfer',
+    waiting_verification: 'Waiting Verification',
+    paid: 'Paid',
+  }
+
+  return map[step] || '-'
+}
+
+const getPaymentStepBadge = (step) => {
+  const map = {
+    choose_bank: 'badge-secondary',
+    waiting_transfer: 'badge-warning',
+    waiting_verification: 'badge-info',
+    paid: 'badge-success',
+  }
+
+  return map[step] || 'badge-secondary'
+}
+
+const formatPaymentStatus = (status, isPaid) => {
+  if (isPaid) return 'Paid'
+  if (!status) return '-'
+
+  const map = {
+    pending: 'Pending',
+    paid: 'Paid',
+    cancelled: 'Cancelled',
+  }
+
+  return map[status] || status
+}
+
+const getPaymentStatusBadge = (status, isPaid) => {
+  if (isPaid) return 'badge-success'
+
+  const map = {
+    pending: 'badge-warning',
+    paid: 'badge-success',
+    cancelled: 'badge-danger',
+  }
+
+  return map[status] || 'badge-secondary'
+}
+
+const toggleSort = (key) => {
+  if (sortKey.value === key) {
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortKey.value = key
+    sortDirection.value = 'asc'
+  }
+}
+
+const getSortIcon = (key) => {
+  if (sortKey.value !== key) return '⇅'
+  return sortDirection.value === 'asc' ? '↑' : '↓'
+}
+
+const getNestedValue = (obj, path) => {
+  return path.split('.').reduce((acc, part) => acc?.[part], obj)
+}
+
+const normalizeSortValue = (item, key) => {
+  if (key === 'payment_step') {
+    return formatPaymentStep(item.payment_step)
+  }
+
+  if (key === 'payment_status') {
+    return formatPaymentStatus(item.payment_status, item.is_paid)
+  }
+
+  return getNestedValue(item, key)
+}
+
+const sortedItems = computed(() => {
+  const cloned = [...items.value]
+
+  if (!sortKey.value) return cloned
+
+  return cloned.sort((a, b) => {
+    let aValue = normalizeSortValue(a, sortKey.value)
+    let bValue = normalizeSortValue(b, sortKey.value)
+
+    if (aValue == null || aValue === '') aValue = ''
+    if (bValue == null || bValue === '') bValue = ''
+
+    if (typeof aValue === 'string' || typeof bValue === 'string') {
+      return sortDirection.value === 'asc'
+        ? String(aValue).localeCompare(String(bValue), 'id', { sensitivity: 'base' })
+        : String(bValue).localeCompare(String(aValue), 'id', { sensitivity: 'base' })
+    }
+
+    if (aValue < bValue) return sortDirection.value === 'asc' ? -1 : 1
+    if (aValue > bValue) return sortDirection.value === 'asc' ? 1 : -1
+    return 0
+  })
+})
+
+const fetchData = async (page = 1) => {
+  isLoading.value = true
+
+  try {
+    const res = await axios.get('/api/v1/register-participants', {
+      params: {
+        page,
+        per_page: perPage.value,
+        search: search.value || null,
+        activity_filter: selectedActivity.value || null,
+        participant_category_id: selectedParticipantCategory.value || null,
+        package_filter: selectedPackageFilter.value || null,
+        payment_step: selectedPaymentStep.value || null,
+      },
+    })
+
+    items.value = res.data.data?.data || []
+    meta.value = res.data.data || {}
+    activities.value = res.data.activities || []
+    participantCategories.value = res.data.participant_categories || []
+    paymentSteps.value = res.data.filters?.payment_steps || []
+  } catch (err) {
+    console.error(err)
+    items.value = []
+    meta.value = {}
+    activities.value = []
+    participantCategories.value = []
+    paymentSteps.value = []
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const changePage = (page) => {
+  if (!page || page < 1) return
+  if (meta.value.last_page && page > meta.value.last_page) return
+  fetchData(page)
+}
+
+const debouncedSearch = useDebounceFn(() => {
+  fetchData(1)
+}, 400)
+
+watch(selectedActivity, () => fetchData(1))
+watch(selectedParticipantCategory, () => fetchData(1))
+watch(selectedPackageFilter, () => fetchData(1))
+watch(selectedPaymentStep, () => fetchData(1))
+watch(perPage, () => fetchData(1))
+watch(search, debouncedSearch)
+
+onMounted(() => fetchData(1))
+</script>

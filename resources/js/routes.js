@@ -130,6 +130,11 @@ export default [
         name: 'admin.activity-participants',
         component: () => import('./pages/participants/ActivityParticipantList.vue'),
       },
+      {
+        path: 'register-participants',
+        name: 'admin.register-participants',
+        component: () => import('./pages/participants/RegisterParticipantList.vue'),
+      },
 
 
 

@@ -323,7 +323,17 @@ watch(
             </router-link>
           </li>
 
-          <li class="nav-item">
+          <li class="nav-item" v-if="can('manage.master.users')">
+            <router-link
+              :to="{ name: 'admin.register-participants' }"
+              class="nav-link"
+              :class="{ active: isNameActive('admin.register-participants') }"
+            >
+              <i class="nav-icon fas fa-user-check"></i><p>Participants Registered</p>
+            </router-link>
+          </li>
+
+          <li class="nav-item" v-if="can('manage.master.users')">
             <router-link
               :to="{ name: 'admin.activity-participants' }"
               class="nav-link"

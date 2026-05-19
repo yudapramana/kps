@@ -64,6 +64,7 @@ use App\Http\Controllers\API\V1\ParticipantVerificationController;
 use App\Http\Controllers\API\V1\PaymentController;
 use App\Http\Controllers\API\V1\PaymentVerificationController;
 use App\Http\Controllers\API\V1\PricingItemController;
+use App\Http\Controllers\API\V1\RegisterParticipantController;
 use App\Http\Controllers\API\V1\RegistrationController;
 use App\Http\Controllers\API\V1\RoomController;
 use App\Http\Controllers\API\V1\SessionController;
@@ -119,6 +120,9 @@ Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
 Route::middleware(['auth:sanctum']) // kalau belum pakai sanctum, boleh dihapus dulu
     ->prefix('v1')
     ->group(function () {
+
+        Route::get('/register-participants/export', [RegisterParticipantController::class, 'export']);
+        Route::get('/register-participants', [RegisterParticipantController::class, 'index']);
 
         Route::get('/activity-participants/export', [ActivityParticipantController::class, 'export']);
         Route::get('/activity-participants', [ActivityParticipantController::class, 'index']);
