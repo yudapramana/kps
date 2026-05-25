@@ -247,55 +247,124 @@
 
             <hr>
 
-            <!-- DECISION -->
-            <div class="form-group">
-            <label class="fw-semibold">
-                Review Decision
-            </label>
-            <select
-                v-model="decision.status"
-                class="form-control form-control-sm"
-            >
-                <option value="">-- Pilih Status --</option>
-                <option value="accepted">Accepted</option>
-                <option value="rejected">Rejected</option>
-            </select>
+            <!-- REVIEWER SCORE -->
+            <div v-if="isReviewerUser">
+              <div class="form-group">
+                <label class="fw-semibold">Reviewer Score</label>
+                <input
+                  v-model.number="decision.reviewer_score"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  class="form-control form-control-sm"
+                  placeholder="Masukkan nilai 0 - 100"
+                  :disabled="reviewerScoreLocked"
+                />
+                <small class="text-muted">
+                  Nilai hanya bisa disimpan sekali. Gunakan rentang 0 - 100 dengan 2 desimal.
+                </small>
+              </div>
+
+              <div
+                v-if="reviewerScoreLocked"
+                class="alert alert-warning py-2 px-3 mb-0"
+              >
+                Reviewer score sudah disimpan dan tidak bisa diubah lagi.
+              </div>
             </div>
 
-            <div
-            class="form-group"
-            v-if="decision.status === 'accepted'"
-            >
-            <label class="fw-semibold">
-                Final Presentation Status
-            </label>
-            <select
-                v-model="decision.final_status"
-                class="form-control form-control-sm"
-            >
-                <option value="">-- Pilih Final Status --</option>
-                <option value="oral_presentation">Oral Presentation</option>
-                <option value="poster_presentation">Poster Presentation</option>
-            </select>
+            <!-- ADMIN / NON REVIEWER DECISION -->
+            <div v-else>
+              <div class="mb-3">
+                <label class="fw-semibold d-block mb-2">Reviewer Score</label>
+
+                <div
+                  v-if="hasReviewerScore"
+                  class="alert alert-info py-2 px-3 mb-0"
+                >
+                  <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <span class="mb-0">Nilai dari reviewer</span>
+                    <strong style="font-size: 1.1rem;">
+                      {{ formattedReviewerScore }}
+                    </strong>
+                  </div>
+                </div>
+
+                <div
+                  v-else
+                  class="alert alert-warning py-2 px-3 mb-0"
+                >
+                  Review decision belum bisa dilakukan karena reviewer belum mengisi nilai.
+                </div>
+              </div>
+
+              <fieldset :disabled="!hasReviewerScore" class="decision-fieldset">
+                <div class="form-group">
+                  <label class="fw-semibold">
+                    Review Decision
+                  </label>
+                  <select
+                    v-model="decision.status"
+                    class="form-control form-control-sm"
+                  >
+                    <option value="">-- Pilih Status --</option>
+                    <option value="accepted">Accepted</option>
+                    <option value="rejected">Rejected</option>
+                  </select>
+                </div>
+
+                <div
+                  class="form-group"
+                  v-if="decision.status === 'accepted'"
+                >
+                  <label class="fw-semibold">
+                    Final Presentation Status
+                  </label>
+                  <select
+                    v-model="decision.final_status"
+                    class="form-control form-control-sm"
+                  >
+                    <option value="">-- Pilih Final Status --</option>
+                    <option value="oral_presentation">Oral Presentation</option>
+                    <option value="poster_presentation">Poster Presentation</option>
+                  </select>
+                </div>
+              </fieldset>
             </div>
 
         </div>
 
         <div class="modal-footer py-2">
-            <button class="btn btn-secondary btn-sm" data-dismiss="modal">
+          <button class="btn btn-secondary btn-sm" data-dismiss="modal">
             Batal
-            </button>
-            <button
-            class="btn btn-success btn-sm"
-            :disabled="isSubmitting"
-            @click="submitReview"
-            >
+          </button>
+
+          <button
+            v-if="isReviewerUser"
+            class="btn btn-primary btn-sm"
+            :disabled="isSubmitting || reviewerScoreLocked"
+            @click="submitReviewerScore"
+          >
             <span
-                v-if="isSubmitting"
-                class="spinner-border spinner-border-sm me-1"
+              v-if="isSubmitting"
+              class="spinner-border spinner-border-sm me-1"
+            ></span>
+            Simpan Reviewer Score
+          </button>
+
+          <button
+            v-else
+            class="btn btn-success btn-sm"
+            :disabled="isSubmitting || !hasReviewerScore"
+            @click="submitDecision"
+          >
+            <span
+              v-if="isSubmitting"
+              class="spinner-border spinner-border-sm me-1"
             ></span>
             Simpan Keputusan
-            </button>
+          </button>
         </div>
 
         </div>
@@ -307,10 +376,11 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { useAuthUserStore } from '../../stores/AuthUserStore'
 
 const Toast = Swal.mixin({
   toast: true,
@@ -320,7 +390,17 @@ const Toast = Swal.mixin({
   timerProgressBar: true,
 })
 
+const hasReviewerScore = computed(() => {
+  const score = selectedPaper.value?.reviewer_score
+  return score !== null && score !== '' && !Number.isNaN(Number(score))
+})
 
+const formattedReviewerScore = computed(() => {
+  if (!hasReviewerScore.value) return '-'
+  return Number(selectedPaper.value.reviewer_score).toFixed(2)
+})
+
+const authUserStore = useAuthUserStore()
 const items = ref([])
 const meta = ref({})
 const search = ref('')
@@ -330,22 +410,131 @@ const selectedPaper = ref(null)
 const isSubmitting = ref(false)
 const paperTypeFilter = ref('')
 
-
 const decision = ref({
   status: '',
   final_status: null,
+  reviewer_score: null,
+})
+
+const username = computed(() => authUserStore.user?.username || '')
+const isReviewerUser = computed(() =>
+  username.value.toLowerCase().includes('reviewer')
+)
+
+const reviewerScoreLocked = computed(() => {
+  const score = selectedPaper.value?.reviewer_score
+  return score !== null && Number(score) !== 0
 })
 
 const openReviewModal = (paper) => {
   selectedPaper.value = paper
   decision.value = {
-    status: paper.status,
+    status: paper.status === 'accepted' || paper.status === 'rejected' ? paper.status : '',
     final_status: paper.final_status,
+    reviewer_score: paper.reviewer_score,
   }
   $('#paperReviewModal').modal('show')
 }
 
-const submitReview = async () => {
+const escapeHtml = (value = '') => {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;')
+}
+
+const submitReviewerScore = async () => {
+  if (reviewerScoreLocked.value) {
+    return Swal.fire({
+      icon: 'warning',
+      title: 'Reviewer score sudah dikunci',
+      text: 'Nilai yang sudah disimpan tidak dapat diubah lagi.',
+    })
+  }
+
+  if (
+    decision.value.reviewer_score === null ||
+    decision.value.reviewer_score === '' ||
+    Number(decision.value.reviewer_score) < 0 ||
+    Number(decision.value.reviewer_score) > 100
+  ) {
+    return Swal.fire({
+      icon: 'warning',
+      title: 'Reviewer score tidak valid',
+      text: 'Masukkan nilai antara 0 sampai 100.',
+    })
+  }
+
+  const confirmResult = await Swal.fire({
+    icon: 'question',
+    title: 'Konfirmasi reviewer score',
+    html: `
+      <div style="text-align:left">
+        <p class="mb-2">Anda yakin ingin menyimpan nilai untuk paper berikut?</p>
+        <div style="padding:10px 12px;background:#f8f9fa;border:1px solid #dee2e6;border-radius:6px;">
+          <div style="font-size:12px;color:#6c757d;margin-bottom:4px;">Paper ID</div>
+          <div style="font-weight:600;">#${String(selectedPaper.value?.id ?? 0).padStart(3, '0')}</div>
+          <div style="font-size:12px;color:#6c757d;margin-bottom:4px;">Judul Paper</div>
+          <div style="font-weight:600;">${escapeHtml(selectedPaper.value?.title ?? '-')}</div>
+        </div>
+        <div style="margin-top:12px;padding:10px 12px;background:#eef6ff;border:1px solid #b6d4fe;border-radius:6px;">
+          <div style="font-size:12px;color:#6c757d;margin-bottom:4px;">Reviewer Score</div>
+          <div style="font-weight:700;font-size:18px;">${Number(decision.value.reviewer_score).toFixed(2)}</div>
+        </div>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Ya, simpan nilai',
+    cancelButtonText: 'Batal',
+    reverseButtons: true,
+    focusCancel: true,
+  })
+
+  if (!confirmResult.isConfirmed) {
+    return
+  }
+
+  isSubmitting.value = true
+
+  try {
+    await axios.put(
+      `/api/v1/papers/${selectedPaper.value.id}/review`,
+      {
+        reviewer_score: Number(decision.value.reviewer_score),
+      }
+    )
+
+    Toast.fire({
+      icon: 'success',
+      title: 'Reviewer score berhasil disimpan',
+    })
+
+    $('#paperReviewModal').modal('hide')
+    fetchData(meta.value.current_page || 1)
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal menyimpan reviewer score',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
+const submitDecision = async () => {
+
+  if (!hasReviewerScore.value) {
+    return Swal.fire({
+      icon: 'warning',
+      title: 'Reviewer score belum tersedia',
+      text: 'Review decision hanya bisa disimpan setelah reviewer memberi nilai.',
+    })
+  }
+
+
   if (!decision.value.status) {
     return Swal.fire({
       icon: 'warning',
@@ -368,7 +557,13 @@ const submitReview = async () => {
   try {
     await axios.put(
       `/api/v1/papers/${selectedPaper.value.id}/review`,
-      decision.value
+      {
+        status: decision.value.status,
+        final_status:
+          decision.value.status === 'accepted'
+            ? decision.value.final_status
+            : null,
+      }
     )
 
     Toast.fire({
@@ -377,7 +572,7 @@ const submitReview = async () => {
     })
 
     $('#paperReviewModal').modal('hide')
-    fetchData(meta.value.current_page)
+    fetchData(meta.value.current_page || 1)
   } catch (e) {
     Swal.fire({
       icon: 'error',
@@ -388,8 +583,6 @@ const submitReview = async () => {
     isSubmitting.value = false
   }
 }
-
-
 
 const fetchData = async (page = 1) => {
   isLoading.value = true
@@ -415,23 +608,10 @@ const fetchData = async (page = 1) => {
   }
 }
 
-
-
-const acceptPaper = async (item) => {
-  await axios.post(`/api/v1/papers/${item.id}/accept`)
-  fetchData(meta.value.current_page)
-}
-
-const rejectPaper = async (item) => {
-  await axios.post(`/api/v1/papers/${item.id}/reject`)
-  fetchData(meta.value.current_page)
-}
-
 const changePage = (page) => {
   if (page < 1 || page > meta.value.last_page) return
   fetchData(page)
 }
-
 
 const paperTypeBadgeClass = (paper) => {
   const code = paper?.paper_type?.code
@@ -441,7 +621,6 @@ const paperTypeBadgeClass = (paper) => {
     ? 'badge-info'
     : 'badge-purple'
 }
-
 
 const formatDateTime = (val) => {
   if (!val) return '-'
@@ -466,5 +645,10 @@ onMounted(fetchData)
 .badge-purple {
   background-color: #6f42c1;
   color: #fff;
+}
+
+.decision-fieldset[disabled] {
+  opacity: 0.65;
+  pointer-events: none;
 }
 </style>

@@ -15,20 +15,29 @@ class PaperFinalController extends Controller
         $paperType = $request->get('paper_type');
 
         $query = Paper::with(['paperType', 'authors', 'participant'])
-            ->where('status', 'accepted');
+            ->where('status', 'accepted')
+            ->whereNotNull('reviewer_score');
 
         if ($search) {
-            $query->where('title', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                ->orWhereHas('participant', function ($p) use ($search) {
+                    $p->where('full_name', 'like', "%{$search}%");
+                });
+            });
         }
 
         if ($paperType) {
-            $query->whereHas('paperType', fn ($q) =>
-                $q->where('code', $paperType)
-            );
+            $query->whereHas('paperType', function ($q) use ($paperType) {
+                $q->where('code', $paperType);
+            });
         }
 
+        $query->orderByDesc('reviewer_score')
+            ->orderBy('title');
+
         return response()->json([
-            'data' => $query->latest()->paginate($perPage),
+            'data' => $query->paginate($perPage),
         ]);
     }
 

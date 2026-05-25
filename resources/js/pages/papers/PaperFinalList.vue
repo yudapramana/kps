@@ -73,15 +73,15 @@
 
         <!-- TABLE -->
         <div class="card-body table-responsive p-0">
-          <table class="table table-bordered table-hover text-sm mb-0">
+          <table class="table table-sm table-bordered table-hover text-sm mb-0 ranking-table">
             <thead class="thead-light">
               <tr>
-                <th style="width:40px">#</th>
-                <th>Nama</th>
+                <th style="width:60px" class="text-center">Rank</th>
+                <th style="width:180px">Nama</th>
                 <th>Judul</th>
-                <th style="width:140px">Tipe</th>
-                <th style="width:160px">Final Status</th>
-                <th style="width:140px" class="text-center">Aksi</th>
+                <th style="width:110px">Tipe</th>
+                <th style="width:110px" class="text-center">Nilai</th>
+                <th style="width:130px" class="text-center">Final</th>
               </tr>
             </thead>
 
@@ -97,19 +97,20 @@
               </tr>
 
               <tr v-for="(item, index) in items" :key="item.id">
-                <td>
-                  {{ index + 1 + (meta.current_page - 1) * meta.per_page }}
+                <td class="text-center">
+                  <strong>{{ index + 1 + (meta.current_page - 1) * meta.per_page }}</strong>
                 </td>
 
                 <td>
-                  <strong>
-                    {{ item.participant.full_name }}
-                  </strong>
+                  <div class="font-weight-bold text-truncate" :title="item.participant?.full_name">
+                    {{ item.participant?.full_name || '-' }}
+                  </div>
                 </td>
 
                 <td>
-                  <strong>{{ item.title }}</strong><br>
-                 
+                  <div class="font-weight-bold line-clamp-2" :title="item.title">
+                    {{ item.title }}
+                  </div>
                 </td>
 
                 <td>
@@ -118,7 +119,13 @@
                   </span>
                 </td>
 
-                <td>
+                <td class="text-center">
+                  <span class="score-pill">
+                    {{ formatScore(item.reviewer_score) }}
+                  </span>
+                </td>
+
+                <td class="text-center">
                   <span
                     class="badge"
                     :class="item.final_status === 'oral_presentation'
@@ -127,15 +134,6 @@
                   >
                     {{ formatFinalStatus(item.final_status) }}
                   </span>
-                </td>
-
-                <td class="text-center">
-                  <button
-                    class="btn btn-primary btn-sm"
-                    @click="openFinalModal(item)"
-                  >
-                    <i class="fas fa-flag-checkered"></i> Final
-                  </button>
                 </td>
               </tr>
             </tbody>
@@ -227,22 +225,12 @@ import { useDebounceFn } from '@vueuse/core'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
-const Toast = Swal.mixin({
-  toast: true,
-  position: 'top-end',
-  showConfirmButton: false,
-  timer: 3000,
-})
-
 const items = ref([])
 const meta = ref({})
 const search = ref('')
 const perPage = ref(10)
 const paperTypeFilter = ref('')
 const isLoading = ref(false)
-const selectedPaper = ref(null)
-const finalStatus = ref('')
-const isSubmitting = ref(false)
 
 const fetchData = async (page = 1) => {
   isLoading.value = true
@@ -257,32 +245,14 @@ const fetchData = async (page = 1) => {
     })
     items.value = res.data.data.data
     meta.value = res.data.data
+  } catch (e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal memuat data ranking paper',
+      text: e.response?.data?.message || 'Terjadi kesalahan sistem',
+    })
   } finally {
     isLoading.value = false
-  }
-}
-
-const openFinalModal = (paper) => {
-  selectedPaper.value = paper
-  finalStatus.value = paper.final_status
-  $('#paperFinalModal').modal('show')
-}
-
-const submitFinal = async () => {
-  if (!finalStatus.value) {
-    return Swal.fire({ icon: 'warning', title: 'Final status belum dipilih' })
-  }
-
-  isSubmitting.value = true
-  try {
-    await axios.put(`/api/v1/papers/${selectedPaper.value.id}/final`, {
-      final_status: finalStatus.value,
-    })
-    Toast.fire({ icon: 'success', title: 'Final presentation disimpan' })
-    $('#paperFinalModal').modal('hide')
-    fetchData(meta.value.current_page)
-  } finally {
-    isSubmitting.value = false
   }
 }
 
@@ -291,10 +261,21 @@ const paperTypeBadgeClass = (paper) =>
     ? 'badge-info'
     : 'badge-purple'
 
-const formatFinalStatus = (val) =>
-  val === 'oral_presentation' ? 'Oral' : 'Poster'
+const formatFinalStatus = (val) => {
+  if (val === 'oral_presentation') return 'Oral'
+  if (val === 'poster_presentation') return 'Poster'
+  return '-'
+}
 
-const changePage = (p) => fetchData(p)
+const formatScore = (val) => {
+  if (val === null || val === undefined || val === '') return '-'
+  return Number(val).toFixed(2)
+}
+
+const changePage = (p) => {
+  if (p < 1 || p > meta.value.last_page) return
+  fetchData(p)
+}
 
 watch(search, useDebounceFn(() => fetchData(1), 400))
 watch(perPage, () => fetchData(1))
@@ -306,5 +287,28 @@ onMounted(fetchData)
 .badge-purple {
   background-color: #6f42c1;
   color: #fff;
+}
+
+.ranking-table th,
+.ranking-table td {
+  padding: 0.45rem 0.5rem;
+  vertical-align: middle;
+}
+
+.score-pill {
+  display: inline-block;
+  min-width: 64px;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  background: #f1f3f5;
+  font-weight: 700;
+  text-align: center;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>

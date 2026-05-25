@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthUserStore } from '../stores/AuthUserStore'
 import { useSettingStore } from '../stores/SettingStore'
@@ -18,6 +18,11 @@ const isUserMenuOpen = ref(false)
 const isEventMenuOpen = ref(false)
 const isPriceMenuOpen = ref(false)
 const isPaymentVerificationMenuOpen = ref(false)
+
+const username = computed(() => authUserStore.user?.username || '')
+const isReviewerUser = computed(() =>
+  username.value.toLowerCase().includes('reviewer')
+)
 
 /* ===============================
  * ACTIVE HELPERS
@@ -426,7 +431,7 @@ watch(
             </router-link>
           </li>
 
-          <li class="nav-item" v-if="can('manage.papers.final')">
+          <li class="nav-item" v-if="can('manage.papers.final') && !isReviewerUser">
             <router-link
               :to="{ name: 'admin.papers.final' }"
               class="nav-link"
