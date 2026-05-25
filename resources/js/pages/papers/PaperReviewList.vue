@@ -1,5 +1,4 @@
 <template>
-  <!-- HEADER -->
   <section class="content-header">
     <div class="container-fluid">
       <div class="d-flex justify-content-between align-items-center">
@@ -13,70 +12,57 @@
     </div>
   </section>
 
-  <!-- CONTENT -->
   <section class="content">
     <div class="container-fluid">
       <div class="card">
-
-        <!-- FILTER -->
         <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center w-100 flex-wrap gap-2">
-
-                <!-- LEFT -->
-                <div class="d-flex align-items-center gap-2 flex-wrap">
-                    <div>
-                        <label class="mb-0 mr-1 text-sm text-muted">Tampilkan</label>
-                        <select
-                        v-model.number="perPage"
-                        class="form-control form-control-sm d-inline-block w-auto"
-                        >
-                        <option :value="10">10</option>
-                        <option :value="25">25</option>
-                        <option :value="50">50</option>
-                        </select>
-                        <span class="text-sm text-muted ml-1 mr-3">Entri</span>
-
-                        <!-- FILTER PAPER TYPE -->
-                        <select
-                            v-model="paperTypeFilter"
-                            class="form-control form-control-sm d-inline-block w-auto"
-                            style="min-width:160px"
-                        >
-                            <option value="">All Types</option>
-                            <option value="RESEARCH">Research</option>
-                            <option value="CASE">Case</option>
-                        </select>
-                    </div>
-
-                    
-                </div>
-
-                <!-- RIGHT -->
-                <div class="d-flex align-items-center gap-2">
-                <input
-                    v-model="search"
-                    type="text"
-                    class="form-control form-control-sm"
-                    style="min-width:240px"
-                    placeholder="Cari judul..."
-                />
-
-                <!-- REFRESH -->
-                <button
-                    class="btn btn-outline-secondary btn-sm"
-                    @click="fetchData(meta.current_page || 1)"
-                    :disabled="isLoading"
-                    title="Refresh"
+          <div class="d-flex justify-content-between align-items-center w-100 flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <div>
+                <label class="mb-0 mr-1 text-sm text-muted">Tampilkan</label>
+                <select
+                  v-model.number="perPage"
+                  class="form-control form-control-sm d-inline-block w-auto"
                 >
-                    <i class="fas fa-sync-alt" :class="{ 'fa-spin': isLoading }"></i>
-                </button>
-                </div>
+                  <option :value="10">10</option>
+                  <option :value="25">25</option>
+                  <option :value="50">50</option>
+                </select>
+                <span class="text-sm text-muted ml-1 mr-3">Entri</span>
 
+                <select
+                  v-model="paperTypeFilter"
+                  class="form-control form-control-sm d-inline-block w-auto"
+                  style="min-width:160px"
+                >
+                  <option value="">All Types</option>
+                  <option value="RESEARCH">Research</option>
+                  <option value="CASE">Case</option>
+                </select>
+              </div>
             </div>
+
+            <div class="d-flex align-items-center gap-2">
+              <input
+                v-model="search"
+                type="text"
+                class="form-control form-control-sm"
+                style="min-width:240px"
+                placeholder="Cari judul..."
+              />
+
+              <button
+                class="btn btn-outline-secondary btn-sm"
+                @click="fetchData(meta.current_page || 1)"
+                :disabled="isLoading"
+                title="Refresh"
+              >
+                <i class="fas fa-sync-alt" :class="{ 'fa-spin': isLoading }"></i>
+              </button>
             </div>
+          </div>
+        </div>
 
-
-        <!-- TABLE -->
         <div class="card-body table-responsive p-0">
           <table class="table table-bordered table-hover text-sm mb-0">
             <thead class="thead-light">
@@ -85,6 +71,7 @@
                 <th>PIDN</th>
                 <th>Judul</th>
                 <th style="width:140px">Tipe</th>
+                <th style="width:160px">Review</th>
                 <th style="width:140px">Status</th>
                 <th style="width:160px" class="text-center">Aksi</th>
               </tr>
@@ -92,11 +79,11 @@
 
             <tbody>
               <tr v-if="isLoading">
-                <td colspan="6" class="text-center">Memuat data...</td>
+                <td colspan="7" class="text-center">Memuat data...</td>
               </tr>
 
               <tr v-else-if="items.length === 0">
-                <td colspan="6" class="text-center text-muted">
+                <td colspan="7" class="text-center text-muted">
                   Tidak ada paper untuk direview.
                 </td>
               </tr>
@@ -107,11 +94,9 @@
                 </td>
 
                 <td>
-                  <strong>
-                    #{{ String(item.id).padStart(3, '0') }}
-                  </strong>
+                  <strong>#{{ String(item.id).padStart(3, '0') }}</strong>
                 </td>
-                
+
                 <td>
                   <strong>{{ item.title }}</strong><br>
                 </td>
@@ -123,27 +108,50 @@
                 </td>
 
                 <td>
+                  <template v-if="isReviewerUser">
+                    <span
+                      class="badge"
+                      :class="item.my_reviewer_assignment?.score !== null ? 'badge-success' : 'badge-warning'"
+                    >
+                      {{ item.my_reviewer_assignment?.score !== null ? 'Sudah Dinilai' : 'Belum Dinilai' }}
+                    </span>
+                  </template>
+
+                  <template v-else>
+                    <span
+                      class="badge"
+                      :class="item.review_summary?.is_complete ? 'badge-success' : 'badge-warning'"
+                    >
+                      {{ item.review_summary?.scored_count || 0 }}/2 Reviewer
+                    </span>
+                  </template>
+                </td>
+
+                <td>
                   <span class="badge badge-warning" v-if="item.status === 'submitted'">
                     Submitted
                   </span>
                   <span class="badge badge-primary" v-else-if="item.status === 'under_review'">
                     Under Review
                   </span>
+                  <span class="badge badge-success" v-else-if="item.status === 'accepted'">
+                    Accepted
+                  </span>
+                  <span class="badge badge-danger" v-else-if="item.status === 'rejected'">
+                    Rejected
+                  </span>
                 </td>
 
-                <!-- AKSI -->
                 <td class="text-center">
-                <button class="btn btn-primary btn-sm" @click="openReviewModal(item)">
+                  <button class="btn btn-primary btn-sm" @click="openReviewModal(item)">
                     <i class="fas fa-search"></i> Review
-                </button>
+                  </button>
                 </td>
-
               </tr>
             </tbody>
           </table>
         </div>
 
-        <!-- FOOTER -->
         <div class="card-footer clearfix py-2">
           <div class="d-flex justify-content-between align-items-center">
             <div class="text-muted text-sm">
@@ -166,89 +174,117 @@
             </ul>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
-    <!-- REVIEW MODAL -->
-    <div class="modal fade" id="paperReviewModal">
+  <div class="modal fade" id="paperReviewModal">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-
+      <div class="modal-content">
         <div class="modal-header py-2">
-            <h5 class="modal-title">
-                Paper Review
-                <span
-                    v-if="selectedPaper?.paper_type"
-                    class="badge text-uppercase ms-2"
-                    :class="paperTypeBadgeClass(selectedPaper)"
-                >
-                    {{ selectedPaper.paper_type?.name }}
-                </span>
-            </h5>
+          <h5 class="modal-title">
+            Paper Review
+            <span
+              v-if="selectedPaper?.paper_type"
+              class="badge text-uppercase ms-2"
+              :class="paperTypeBadgeClass(selectedPaper)"
+            >
+              {{ selectedPaper.paper_type?.name }}
+            </span>
+          </h5>
 
-            <button type="button" class="close" data-dismiss="modal">
+          <button type="button" class="close" data-dismiss="modal">
             <span>&times;</span>
-            </button>
+          </button>
         </div>
 
         <div class="modal-body" v-if="selectedPaper">
-
-            <!-- BASIC INFO -->
-            <div class="mb-3">
+          <div class="mb-3">
             <h5 class="fw-bold mb-1">
-                <span style="font-size: larger; font-weight: bolder;">#{{ String(selectedPaper.id).padStart(3, '0') }}</span> {{ selectedPaper.title }}
+              <span style="font-size: larger; font-weight: bolder;">#{{ String(selectedPaper.id).padStart(3, '0') }}</span>
+              {{ selectedPaper.title }}
             </h5>
 
-            <!-- <div class="text-muted small mb-1">
-                {{ selectedPaper.authors.map(a => a.name).join(', ') }}
-            </div> -->
-
-            <!-- META DATE -->
             <div class="small text-muted">
-                <span>
+              <span>
                 <strong>Submitted:</strong>
                 {{ formatDateTime(selectedPaper.submitted_at) }}
-                </span>
-                <span class="mx-2">•</span>
-                <span>
+              </span>
+              <span class="mx-2">•</span>
+              <span>
                 <strong>Reviewed:</strong>
                 {{ formatDateTime(selectedPaper.reviewed_at) }}
-                </span>
+              </span>
             </div>
-            </div>
+          </div>
 
-            <!-- ABSTRACT -->
-            <div class="mb-4">
-            <div class="fw-semibold mb-2">
-                Abstract / Case Summary
-            </div>
-
+          <div class="mb-4">
+            <div class="fw-semibold mb-2">Abstract / Case Summary</div>
             <div
-                class="p-3 border rounded-3 bg-white"
-                style="text-align: justify; line-height: 1.7; font-size: 0.95rem;"
+              class="p-3 border rounded-3 bg-white"
+              style="text-align: justify; line-height: 1.7; font-size: 0.95rem;"
             >
-                {{ selectedPaper.abstract }}
+              {{ selectedPaper.abstract }}
             </div>
-            </div>
+          </div>
 
-            <!-- FILE -->
-            <div class="mb-3">
+          <div class="mb-3">
             <div class="fw-semibold mb-1">Submitted File</div>
             <a
-                :href="selectedPaper.gdrive_link"
-                target="_blank"
-                class="text-primary"
+              :href="selectedPaper.gdrive_link"
+              target="_blank"
+              class="text-primary"
             >
-                Preview File
+              Preview File
             </a>
+          </div>
+
+          <hr>
+
+          <!-- SESUDAH: hanya untuk non-reviewer -->
+          <div class="mb-3" v-if="!isReviewerUser">
+            <label class="fw-semibold d-block mb-2">Ringkasan Penilaian</label>
+
+            <div class="border rounded p-3 bg-light">
+              <div
+                v-for="reviewer in selectedPaper.reviewers || []"
+                :key="`${selectedPaper.id}-${reviewer.id}`"
+                class="d-flex justify-content-between align-items-center py-1"
+              >
+                <div>
+                  Reviewer {{ reviewer.review_order }}
+                  <span class="text-muted">({{ reviewer.username }})</span>
+                </div>
+                <div>
+                  <span v-if="reviewer.score !== null" class="font-weight-bold text-success">
+                    {{ Number(reviewer.score).toFixed(2) }}
+                  </span>
+                  <span v-else class="text-muted">
+                    Belum menilai
+                  </span>
+                </div>
+              </div>
+
+              <hr class="my-2">
+
+              <div class="d-flex justify-content-between align-items-center">
+                <span>Total reviewer selesai</span>
+                <strong>{{ selectedPaper.review_summary?.scored_count || 0 }}/2</strong>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mt-1">
+                <span>Final score</span>
+                <strong>{{ formattedFinalScore }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="isReviewerUser">
+            <div v-if="!selectedPaper.my_reviewer_assignment" class="alert alert-danger py-2 px-3">
+              Anda tidak memiliki assignment reviewer untuk paper ini.
             </div>
 
-            <hr>
-
-            <!-- REVIEWER SCORE -->
-            <div v-if="isReviewerUser">
+            <template v-else>
               <div class="form-group">
                 <label class="fw-semibold">Reviewer Score</label>
                 <input
@@ -272,67 +308,62 @@
               >
                 Reviewer score sudah disimpan dan tidak bisa diubah lagi.
               </div>
-            </div>
+            </template>
+          </div>
 
-            <!-- ADMIN / NON REVIEWER DECISION -->
-            <div v-else>
-              <div class="mb-3">
-                <label class="fw-semibold d-block mb-2">Reviewer Score</label>
+          <div v-else>
+            <div class="mb-3">
+              <label class="fw-semibold d-block mb-2">Status Penilaian Reviewer</label>
 
-                <div
-                  v-if="hasReviewerScore"
-                  class="alert alert-info py-2 px-3 mb-0"
-                >
-                  <div class="d-flex justify-content-between align-items-center flex-wrap">
-                    <span class="mb-0">Nilai dari reviewer</span>
-                    <strong style="font-size: 1.1rem;">
-                      {{ formattedReviewerScore }}
-                    </strong>
-                  </div>
-                </div>
-
-                <div
-                  v-else
-                  class="alert alert-warning py-2 px-3 mb-0"
-                >
-                  Review decision belum bisa dilakukan karena reviewer belum mengisi nilai.
+              <div
+                v-if="reviewCompleted"
+                class="alert alert-info py-2 px-3 mb-0"
+              >
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                  <span class="mb-0">2 reviewer sudah memberi nilai</span>
+                  <strong style="font-size: 1.1rem;">
+                    Avg: {{ formattedAverageScore }}
+                  </strong>
                 </div>
               </div>
 
-              <fieldset :disabled="!hasReviewerScore" class="decision-fieldset">
-                <div class="form-group">
-                  <label class="fw-semibold">
-                    Review Decision
-                  </label>
-                  <select
-                    v-model="decision.status"
-                    class="form-control form-control-sm"
-                  >
-                    <option value="">-- Pilih Status --</option>
-                    <option value="accepted">Accepted</option>
-                    <option value="rejected">Rejected</option>
-                  </select>
-                </div>
-
-                <div
-                  class="form-group"
-                  v-if="decision.status === 'accepted'"
-                >
-                  <label class="fw-semibold">
-                    Final Presentation Status
-                  </label>
-                  <select
-                    v-model="decision.final_status"
-                    class="form-control form-control-sm"
-                  >
-                    <option value="">-- Pilih Final Status --</option>
-                    <option value="oral_presentation">Oral Presentation</option>
-                    <option value="poster_presentation">Poster Presentation</option>
-                  </select>
-                </div>
-              </fieldset>
+              <div
+                v-else
+                class="alert alert-warning py-2 px-3 mb-0"
+              >
+                Review decision belum bisa dilakukan karena penilaian dari 2 reviewer belum lengkap.
+              </div>
             </div>
 
+            <fieldset :disabled="!reviewCompleted" class="decision-fieldset">
+              <div class="form-group">
+                <label class="fw-semibold">Review Decision</label>
+                <select
+                  v-model="decision.status"
+                  class="form-control form-control-sm"
+                >
+                  <option value="">-- Pilih Status --</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+              </div>
+
+              <div
+                class="form-group"
+                v-if="decision.status === 'accepted'"
+              >
+                <label class="fw-semibold">Final Presentation Status</label>
+                <select
+                  v-model="decision.final_status"
+                  class="form-control form-control-sm"
+                >
+                  <option value="">-- Pilih Final Status --</option>
+                  <option value="oral_presentation">Oral Presentation</option>
+                  <option value="poster_presentation">Poster Presentation</option>
+                </select>
+              </div>
+            </fieldset>
+          </div>
         </div>
 
         <div class="modal-footer py-2">
@@ -343,7 +374,7 @@
           <button
             v-if="isReviewerUser"
             class="btn btn-primary btn-sm"
-            :disabled="isSubmitting || reviewerScoreLocked"
+            :disabled="isSubmitting || reviewerScoreLocked || !selectedPaper?.my_reviewer_assignment"
             @click="submitReviewerScore"
           >
             <span
@@ -356,7 +387,7 @@
           <button
             v-else
             class="btn btn-success btn-sm"
-            :disabled="isSubmitting || !hasReviewerScore"
+            :disabled="isSubmitting || !reviewCompleted"
             @click="submitDecision"
           >
             <span
@@ -366,13 +397,9 @@
             Simpan Keputusan
           </button>
         </div>
-
-        </div>
+      </div>
     </div>
-    </div>
-
-
-
+  </div>
 </template>
 
 <script setup>
@@ -390,16 +417,6 @@ const Toast = Swal.mixin({
   timerProgressBar: true,
 })
 
-const hasReviewerScore = computed(() => {
-  const score = selectedPaper.value?.reviewer_score
-  return score !== null && score !== '' && !Number.isNaN(Number(score))
-})
-
-const formattedReviewerScore = computed(() => {
-  if (!hasReviewerScore.value) return '-'
-  return Number(selectedPaper.value.reviewer_score).toFixed(2)
-})
-
 const authUserStore = useAuthUserStore()
 const items = ref([])
 const meta = ref({})
@@ -414,6 +431,7 @@ const decision = ref({
   status: '',
   final_status: null,
   reviewer_score: null,
+  notes: null,
 })
 
 const username = computed(() => authUserStore.user?.username || '')
@@ -422,8 +440,21 @@ const isReviewerUser = computed(() =>
 )
 
 const reviewerScoreLocked = computed(() => {
-  const score = selectedPaper.value?.reviewer_score
-  return score !== null && Number(score) !== 0
+  return selectedPaper.value?.my_reviewer_assignment?.score !== null
+})
+
+const reviewCompleted = computed(() => {
+  return !!selectedPaper.value?.review_summary?.is_complete
+})
+
+const formattedAverageScore = computed(() => {
+  const avg = selectedPaper.value?.review_summary?.average_score
+  return avg !== null && avg !== undefined ? Number(avg).toFixed(2) : '-'
+})
+
+const formattedFinalScore = computed(() => {
+  const score = selectedPaper.value?.final_score ?? selectedPaper.value?.review_summary?.average_score
+  return score !== null && score !== undefined ? Number(score).toFixed(2) : '-'
 })
 
 const openReviewModal = (paper) => {
@@ -431,7 +462,8 @@ const openReviewModal = (paper) => {
   decision.value = {
     status: paper.status === 'accepted' || paper.status === 'rejected' ? paper.status : '',
     final_status: paper.final_status,
-    reviewer_score: paper.reviewer_score,
+    reviewer_score: paper.my_reviewer_assignment?.score,
+    notes: paper.my_reviewer_assignment?.notes || null,
   }
   $('#paperReviewModal').modal('show')
 }
@@ -446,6 +478,14 @@ const escapeHtml = (value = '') => {
 }
 
 const submitReviewerScore = async () => {
+  if (!selectedPaper.value?.my_reviewer_assignment) {
+    return Swal.fire({
+      icon: 'error',
+      title: 'Assignment reviewer tidak ditemukan',
+      text: 'Paper ini tidak ditugaskan kepada reviewer yang sedang login.',
+    })
+  }
+
   if (reviewerScoreLocked.value) {
     return Swal.fire({
       icon: 'warning',
@@ -492,19 +532,15 @@ const submitReviewerScore = async () => {
     focusCancel: true,
   })
 
-  if (!confirmResult.isConfirmed) {
-    return
-  }
+  if (!confirmResult.isConfirmed) return
 
   isSubmitting.value = true
 
   try {
-    await axios.put(
-      `/api/v1/papers/${selectedPaper.value.id}/review`,
-      {
-        reviewer_score: Number(decision.value.reviewer_score),
-      }
-    )
+    await axios.put(`/api/v1/papers/${selectedPaper.value.id}/review`, {
+      reviewer_score: Number(decision.value.reviewer_score),
+      notes: decision.value.notes,
+    })
 
     Toast.fire({
       icon: 'success',
@@ -525,15 +561,13 @@ const submitReviewerScore = async () => {
 }
 
 const submitDecision = async () => {
-
-  if (!hasReviewerScore.value) {
+  if (!reviewCompleted.value) {
     return Swal.fire({
       icon: 'warning',
-      title: 'Reviewer score belum tersedia',
-      text: 'Review decision hanya bisa disimpan setelah reviewer memberi nilai.',
+      title: 'Penilaian reviewer belum lengkap',
+      text: 'Review decision hanya bisa disimpan setelah 2 reviewer memberi nilai.',
     })
   }
-
 
   if (!decision.value.status) {
     return Swal.fire({
@@ -555,16 +589,12 @@ const submitDecision = async () => {
   isSubmitting.value = true
 
   try {
-    await axios.put(
-      `/api/v1/papers/${selectedPaper.value.id}/review`,
-      {
-        status: decision.value.status,
-        final_status:
-          decision.value.status === 'accepted'
-            ? decision.value.final_status
-            : null,
-      }
-    )
+    await axios.put(`/api/v1/papers/${selectedPaper.value.id}/review`, {
+      status: decision.value.status,
+      final_status: decision.value.status === 'accepted'
+        ? decision.value.final_status
+        : null,
+    })
 
     Toast.fire({
       icon: 'success',
@@ -616,10 +646,7 @@ const changePage = (page) => {
 const paperTypeBadgeClass = (paper) => {
   const code = paper?.paper_type?.code
   if (!code) return 'badge-secondary'
-
-  return code === 'RESEARCH'
-    ? 'badge-info'
-    : 'badge-purple'
+  return code === 'RESEARCH' ? 'badge-info' : 'badge-purple'
 }
 
 const formatDateTime = (val) => {
@@ -639,7 +666,6 @@ watch(search, useDebounceFn(() => fetchData(1), 400))
 watch(perPage, () => fetchData(1))
 onMounted(fetchData)
 </script>
-
 
 <style scoped>
 .badge-purple {

@@ -1,5 +1,4 @@
 <template>
-  <!-- HEADER -->
   <section class="content-header">
     <div class="container-fluid">
       <div class="d-flex justify-content-between align-items-center">
@@ -13,16 +12,11 @@
     </div>
   </section>
 
-  <!-- CONTENT -->
   <section class="content">
     <div class="container-fluid">
       <div class="card">
-
-        <!-- FILTER -->
         <div class="card-header">
           <div class="d-flex justify-content-between align-items-center w-100 flex-wrap gap-2">
-
-            <!-- LEFT -->
             <div class="d-flex align-items-center gap-2 flex-wrap">
               <div>
                 <label class="mb-0 mr-1 text-sm text-muted">Tampilkan</label>
@@ -36,7 +30,6 @@
                 </select>
                 <span class="text-sm text-muted ml-1 mr-3">Entri</span>
 
-                <!-- PAPER TYPE -->
                 <select
                   v-model="paperTypeFilter"
                   class="form-control form-control-sm d-inline-block w-auto"
@@ -49,7 +42,6 @@
               </div>
             </div>
 
-            <!-- RIGHT -->
             <div class="d-flex align-items-center gap-2">
               <input
                 v-model="search"
@@ -67,11 +59,9 @@
                 <i class="fas fa-sync-alt" :class="{ 'fa-spin': isLoading }"></i>
               </button>
             </div>
-
           </div>
         </div>
 
-        <!-- TABLE -->
         <div class="card-body table-responsive p-0">
           <table class="table table-sm table-bordered table-hover text-sm mb-0 ranking-table">
             <thead class="thead-light">
@@ -121,7 +111,7 @@
 
                 <td class="text-center">
                   <span class="score-pill">
-                    {{ formatScore(item.reviewer_score) }}
+                    {{ formatScore(item.final_score) }}
                   </span>
                 </td>
 
@@ -130,7 +120,9 @@
                     class="badge"
                     :class="item.final_status === 'oral_presentation'
                       ? 'badge-success'
-                      : 'badge-info'"
+                      : item.final_status === 'poster_presentation'
+                        ? 'badge-info'
+                        : 'badge-secondary'"
                   >
                     {{ formatFinalStatus(item.final_status) }}
                   </span>
@@ -140,7 +132,6 @@
           </table>
         </div>
 
-        <!-- FOOTER -->
         <div class="card-footer clearfix py-2">
           <div class="d-flex justify-content-between align-items-center">
             <div class="text-muted text-sm">
@@ -163,60 +154,9 @@
             </ul>
           </div>
         </div>
-
       </div>
     </div>
   </section>
-
-  <!-- FINAL MODAL -->
-  <div class="modal fade" id="paperFinalModal">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <div class="modal-content">
-
-        <div class="modal-header py-2">
-          <h5 class="modal-title">Final Presentation</h5>
-          <button type="button" class="close" data-dismiss="modal">
-            <span>&times;</span>
-          </button>
-        </div>
-
-        <div class="modal-body" v-if="selectedPaper">
-          <h5 class="fw-bold mb-1">{{ selectedPaper.title }}</h5>
-          <div class="text-muted small mb-3">
-            {{ selectedPaper.authors.map(a => a.name).join(', ') }}
-          </div>
-
-          <div class="form-group">
-            <label class="fw-semibold">Final Presentation Status</label>
-            <select
-              v-model="finalStatus"
-              class="form-control form-control-sm"
-            >
-              <option value="">-- Pilih --</option>
-              <option value="oral_presentation">Oral Presentation</option>
-              <option value="poster_presentation">Poster Presentation</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="modal-footer py-2">
-          <button class="btn btn-secondary btn-sm" data-dismiss="modal">
-            Batal
-          </button>
-          <button
-            class="btn btn-success btn-sm"
-            :disabled="isSubmitting"
-            @click="submitFinal"
-          >
-            <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
-            Simpan Final
-          </button>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
 </template>
 
 <script setup>
@@ -293,6 +233,13 @@ onMounted(fetchData)
 .ranking-table td {
   padding: 0.45rem 0.5rem;
   vertical-align: middle;
+}
+
+.ranking-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f8f9fa;
 }
 
 .score-pill {

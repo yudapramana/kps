@@ -143,4 +143,19 @@ class User extends Authenticatable
         return $roleNames;
     }
 
+    public function reviewedPapers()
+    {
+        return $this->belongsToMany(Paper::class, 'paper_reviewer', 'user_id', 'paper_id')
+            ->using(PaperReviewer::class)
+            ->withPivot([
+                'id',
+                'review_order',
+                'score',
+                'notes',
+                'assigned_at',
+                'reviewed_at',
+            ])
+            ->withTimestamps();
+    }
+
 }

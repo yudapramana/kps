@@ -73,7 +73,9 @@ use App\Http\Controllers\API\V1\UserController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\Auth\PasswordResetWhatsappController;
 use App\Models\ActivitySponsor;
+use App\Http\Controllers\PaperReviewerAssignmentController;
 
+Route::get('/papers/assign-submitted-reviewers', [PaperReviewerAssignmentController::class, 'assignSubmittedPapers']);
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -84,6 +86,7 @@ use App\Models\ActivitySponsor;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     // return $request->user();

@@ -31,4 +31,19 @@ class Paper extends Model
     {
         return $this->belongsTo(PaperType::class, 'paper_type_id');
     }
+
+    public function reviewers()
+    {
+        return $this->belongsToMany(User::class, 'paper_reviewer', 'paper_id', 'user_id')
+            ->using(PaperReviewer::class)
+            ->withPivot([
+                'id',
+                'review_order',
+                'score',
+                'notes',
+                'assigned_at',
+                'reviewed_at',
+            ])
+            ->withTimestamps();
+    }
 }
